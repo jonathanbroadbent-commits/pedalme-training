@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pedal Me Training</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--green:#1D9E75;--green-light:#E1F5EE;--green-dark:#085041;--red:#E24B4A;--red-light:#FCEBEB;--amber:#EF9F27;--amber-light:#FAEEDA;--blue-light:#E6F1FB;--blue:#185FA5;--g50:#F7F6F3;--g100:#EEEDE9;--g200:#D3D1C7;--g400:#888780;--g600:#5F5E5A;--g900:#1A1916;--rsm:8px;--rmd:12px;--rlg:16px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g900);min-height:100vh;max-width:430px;margin:0 auto;overflow-x:hidden}
+.screen{display:none;min-height:100vh;padding-bottom:40px}
+.screen.active{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hdr{background:#fff;padding:52px 20px 16px;border-bottom:1px solid var(--g100);position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:12px}
+.logo{width:36px;height:36px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.bhdr{background:#fff;padding:52px 20px 14px;border-bottom:1px solid var(--g100);position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px}
+.bbtn{width:34px;height:34px;border-radius:50%;border:1px solid var(--g200);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.bbtn svg{width:16px;height:16px;stroke:var(--g600);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.btitle{font-size:17px;font-weight:600}
+.pad{padding:20px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.scard{background:#fff;border-radius:var(--rmd);border:1px solid var(--g100);padding:14px 16px}
+.slbl{font-size:12px;color:var(--g400);margin-bottom:4px;font-family:'DM Mono',monospace;letter-spacing:.02em}
+.sval{font-size:26px;font-weight:600;line-height:1}
+.ssub{font-size:12px;color:var(--g400);margin-top:4px}
+.secl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:10px;font-family:'DM Mono',monospace}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
+.fc{background:#fff;border-radius:var(--rmd);border:1px solid var(--g100);padding:16px 14px;cursor:pointer;text-align:left;transition:transform .12s;text-decoration:none;display:block}
+.fc:active{transform:scale(.97)}
+.fi{width:36px;height:36px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.fi svg{width:18px;height:18px;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.fn{font-size:14px;font-weight:600;color:var(--g900)}
+.fd{font-size:12px;color:var(--g400);margin-top:2px}
+.fe{font-size:11px;color:var(--g400);margin-top:8px}
+.ig{background:var(--green-light)}.ig svg{stroke:var(--green-dark)}
+.ib{background:var(--blue-light)}.ib svg{stroke:var(--blue)}
+.ia{background:var(--amber-light)}.ia svg{stroke:#854F0B}
+.tlist{display:flex;flex-direction:column;gap:8px}
+.trow{background:#fff;border-radius:var(--rmd);border:1px solid var(--g100);padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.trow:active{background:var(--g50)}
+.av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.avlg{width:56px;height:56px;font-size:18px}
+.av1{background:#EEEDFE;color:#3C3489}.av2{background:#E1F5EE;color:#085041}.av3{background:#E6F1FB;color:#0C447C}
+.av4{background:#FAECE7;color:#712B13}.av5{background:#FAEEDA;color:#633806}.av6{background:#FBEAF0;color:#72243E}
+.ti{flex:1;min-width:0}
+.tn{font-size:14px;font-weight:600}
+.tm{font-size:12px;color:var(--g400);margin-top:2px}
+.chv svg{width:14px;height:14px;stroke:var(--g200);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.bdg{display:inline-block;font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px}
+.bg{background:#EAF3DE;color:#3B6D11}.ba{background:#FAEEDA;color:#854F0B}.br{background:#FCEBEB;color:#A32D2D}
+.bt{background:#E1F5EE;color:#0F6E56}.bgy{background:var(--g100);color:var(--g600)}
+.thero{display:flex;align-items:center;gap:14px;padding:20px 20px 0;margin-bottom:20px}
+.thn{font-size:20px;font-weight:600;margin-bottom:4px}
+.alrt{border-radius:var(--rsm);padding:12px 14px;font-size:13px;line-height:1.5;margin-bottom:16px}
+.ar{background:var(--red-light);color:#791F1F}.ag{background:var(--green-light);color:var(--green-dark)}
+.nbox{background:var(--g50);border-radius:var(--rsm);border:1px solid var(--g100);padding:14px;font-size:14px;line-height:1.65;color:var(--g600);margin-bottom:20px}
+.flink{background:#fff;border:1px solid var(--g100);border-radius:var(--rmd);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer;text-decoration:none}
+.flink:active{background:var(--g50)}
+.fln{font-size:15px;font-weight:500;color:var(--g900)}
+.fls{font-size:12px;color:var(--g400);margin-top:2px}
+.flink svg{width:16px;height:16px;stroke:var(--g400);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
+.obtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.bc{background:var(--green-light);color:var(--green-dark);border:1px solid #9FE1CB;border-radius:var(--rmd);padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.bi{background:var(--red-light);color:#791F1F;border:1px solid #F7C1C1;border-radius:var(--rmd);padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.bon{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--rlg);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px}
+.bem{width:100%;padding:14px;background:#fff;color:var(--g900);border:1px solid var(--g200);border-radius:var(--rlg);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.bpr{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--rlg);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px}
+.ifl{margin-bottom:14px}
+.ilbl{font-size:13px;color:var(--g600);margin-bottom:5px;display:block}
+.iel{width:100%;font-family:'DM Sans',sans-serif;font-size:15px;padding:10px 12px;border:1px solid var(--g200);border-radius:var(--rmd);background:#fff;color:var(--g900)}
+.iel:focus{outline:none;border-color:var(--green)}
+select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888780' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.omsg{display:none;border-radius:var(--rsm);padding:12px 14px;font-size:13px;font-weight:500;margin-bottom:8px;text-align:center}
+</style>
+</head>
+<body>
+
+<!-- TRAINER SCREEN -->
+<div id="s-trainer" class="screen active">
+  <div style="padding:60px 24px 24px">
+    <div class="logo" style="margin-bottom:20px"><svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17l4-10h6l4 10"/><path d="M9 7l2-4h4"/></svg></div>
+    <div style="font-size:22px;font-weight:600;margin-bottom:6px">Pedal Me Training</div>
+    <div style="font-size:15px;color:var(--g600);margin-bottom:32px">Who are you?</div>
+    <div class="ifl">
+      <select class="iel" id="trainer-sel">
+        <option value="Jonathan Broadbent">Jonathan Broadbent</option>
+        <option value="Thato Watani">Thato Watani</option>
+        <option value="David S-Szczesniak">David S-Szczesniak</option>
+      </select>
+    </div>
+    <button class="bpr" id="continue-btn">Continue</button>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="s-home" class="screen">
+  <div class="hdr">
+    <div class="logo"><svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17l4-10h6l4 10"/><path d="M9 7l2-4h4"/></svg></div>
+    <div><div style="font-size:17px;font-weight:600">Pedal Me</div><div style="font-size:13px;color:var(--g400)">Training dashboard</div></div>
+  </div>
+  <div class="pad">
+    <div class="sgrid">
+      <div class="scard"><div class="slbl">Trainees</div><div class="sval" id="stat-active">—</div><div class="ssub">active</div></div>
+      <div class="scard"><div class="slbl">Avg score</div><div class="sval" id="stat-avg">—</div><div class="ssub">out of 5</div></div>
+      <div class="scard"><div class="slbl">At risk</div><div class="sval" id="stat-risk" style="color:var(--red)">—</div><div class="ssub">need attention</div></div>
+      <div class="scard"><div class="slbl">Onboarded</div><div class="sval" id="stat-onb" style="color:var(--green)">—</div><div class="ssub">this cohort</div></div>
+    </div>
+    <div class="secl">Log a session</div>
+    <div class="fgrid">
+      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLSdAluEwZqNjUyjsOiwei7aI5NzzpWmBi6t9UeT5yNRoLLtr7g/viewform" target="_blank">
+        <div class="fi ig"><svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M14 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V8l-4-4z"/></svg></div>
+        <div class="fn">Intro</div><div class="fd">First meeting</div><div class="fe">&#8599; Google Form</div>
+      </a>
+      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLScYqdrfZKH7Zywn-mC4j3m3nm3eivvxUBRLNkaXh8c0Z5Phcg/viewform" target="_blank">
+        <div class="fi ig"><svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17l4-10h6l4 10"/></svg></div>
+        <div class="fn">OR 1/2</div><div class="fd">Off-road skills</div><div class="fe">&#8599; Google Form</div>
+      </a>
+      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLSfNvaxoocxXAm3xUaVcwmi3sw_T6jNwfVoXo1QUnCrpD2XvNQ/viewform" target="_blank">
+        <div class="fi ib"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div class="fn">1:1 session</div><div class="fd">On-road coaching</div><div class="fe">&#8599; Google Form</div>
+      </a>
+      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLSfgTFOaX0l9BWmgvBBjjWVpIIcbULS_CHFznI1xMFHPLdW3gQ/viewform" target="_blank">
+        <div class="fi ia"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6l9-3 9 3M3 18l9 3 9-3"/></svg></div>
+        <div class="fn">Navigation</div><div class="fd">Route assessment</div><div class="fe">&#8599; Google Form</div>
+      </a>
+      <a class="fc" href="https://docs.google.com/forms/d/1HFlUTqBLIAYrvyfNjNK4ZMcOBsDKW4lD4p4Me7l7PRA/viewform" target="_blank">
+        <div class="fi ib"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg></div>
+        <div class="fn">Assessment</div><div class="fd">Final ride</div><div class="fe">&#8599; Google Form</div>
+      </a>
+    </div>
+    <div class="secl">Trainees</div>
+    <div class="tlist" id="trainee-list">
+      <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading&#8230;</div>
+    </div>
+  </div>
+</div>
+
+<!-- DYNAMIC SCREENS (built by JS) -->
+<div id="s-profile" class="screen"></div>
+<div id="s-email" class="screen"></div>
+<div id="s-onboard" class="screen"></div>
+
+<script>
+var TRAINER = '';
+var SHEET = 'https://script.google.com/macros/s/AKfycbwmLW4csQJsAcKnpuM_qNJ6c5oegPnZ3MOjN5XMqQ6CPpmNn6w-0YhYBvl02T9X_zff/exec';
+var TRAINEES = [];
+var PROGRESS = [];
+var AVC = ['av1','av2','av3','av4','av5','av6'];
+
+var PIPELINE = [
+  {key:'intro',      label:'1. Intro',                url:'https://docs.google.com/forms/d/e/1FAIpQLSdAluEwZqNjUyjsOiwei7aI5NzzpWmBi6t9UeT5yNRoLLtr7g/viewform'},
+  {key:'1to1',       label:'2. 1:1 session',          url:'https://docs.google.com/forms/d/e/1FAIpQLSfNvaxoocxXAm3xUaVcwmi3sw_T6jNwfVoXo1QUnCrpD2XvNQ/viewform'},
+  {key:'or12',       label:'3. OR 1/2',               url:'https://docs.google.com/forms/d/e/1FAIpQLScYqdrfZKH7Zywn-mC4j3m3nm3eivvxUBRLNkaXh8c0Z5Phcg/viewform'},
+  {key:'nav',        label:'4. Navigation',           url:'https://docs.google.com/forms/d/e/1FAIpQLSfgTFOaX0l9BWmgvBBjjWVpIIcbULS_CHFznI1xMFHPLdW3gQ/viewform'},
+  {key:'assessment', label:'5. Assessment',           url:'https://docs.google.com/forms/d/1HFlUTqBLIAYrvyfNjNK4ZMcOBsDKW4lD4p4Me7l7PRA/viewform'}
+];
+
+var SINFO = {
+  'intro':      {name:'Intro',                  prep:'Please bring your own bike.',                                         dur:''},
+  '1to1':       {name:'1:1 session',             prep:'Please be prepared for the weather and bring your own bike.',          dur:'The session will be approximately 1.5 hours.'},
+  'or12':       {name:'OR 1/2',                  prep:'Please be prepared for the weather and bring water and snacks.',       dur:'The session will be approximately 2.5 hours.'},
+  'nav':        {name:'Navigation & Assessment', prep:'Please be prepared for the weather and bring your own bike.',          dur:'The session will be approximately 2.5 hours.'},
+  'assessment': {name:'Assessment',              prep:'Please be prepared for the weather and bring your own bike.',          dur:'The session will be approximately 2.5 hours.'}
+};
+
+document.getElementById('continue-btn').onclick = function() {
+  TRAINER = document.getElementById('trainer-sel').value;
+  go('s-home');
+  loadData();
+};
+
+function go(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+}
+
+function jsonp(url, cb) {
+  var name = 'cb_' + Math.random().toString(36).slice(2);
+  window[name] = function(data) {
+    delete window[name];
+    document.head.removeChild(script);
+    cb(data);
+  };
+  var script = document.createElement('script');
+  script.src = url + '&callback=' + name;
+  document.head.appendChild(script);
+}
+
+function loadData() {
+  var list = document.getElementById('trainee-list');
+  if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>';
+  fetch(SHEET + '?action=getTrainees')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      TRAINEES = d.trainees || [];
+      return fetch(SHEET + '?action=getProgress');
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      PROGRESS = d.progress || [];
+      renderList();
+      renderStats();
+    })
+    .catch(function(e){
+      console.log('fetch failed, trying JSONP...', e);
+      loadViaJsonp();
+    });
+}
+
+function loadViaJsonp() {
+  var list = document.getElementById('trainee-list');
+  jsonp(SHEET + '?action=getTrainees', function(d) {
+    TRAINEES = d.trainees || [];
+    jsonp(SHEET + '?action=getProgress', function(d2) {
+      PROGRESS = d2.progress || [];
+      renderList();
+      renderStats();
+    });
+  });
+  setTimeout(function() {
+    if (!TRAINEES.length && list) {
+      list.innerHTML = '<div style="padding:20px;text-align:center;color:#A32D2D;font-size:14px">Could not load data. Check connection.</div>';
+    }
+  }, 8000);
+}
+
+function getProg(name) {
+  for (var i=0;i<PROGRESS.length;i++) if (PROGRESS[i].Trainee===name) return PROGRESS[i];
+  return null;
+}
+
+function getT(name) {
+  for (var i=0;i<TRAINEES.length;i++) if (TRAINEES[i].name===name) return TRAINEES[i];
+  return null;
+}
+
+function active() {
+  return TRAINEES.filter(function(t){ var s=t.status||''; return s!=='Did not complete' && s!=='Onboarded' && s!=='Completed'; });
+}
+
+function doneIdx(p) {
+  var l = p && p['Last Training'] ? p['Last Training'].toString().toUpperCase() : '';
+  if (l.indexOf('ASSESSMENT')>-1) return 4;
+  if (l.indexOf('NAVIGATION')>-1||l.indexOf('NAV')>-1) return 3;
+  if (l.indexOf('OR')>-1) return 2;
+  if (l.indexOf('1:1')>-1||l.indexOf('1 TO 1')>-1) return 1;
+  if (l.indexOf('INTRO')>-1) return 0;
+  return -1;
+}
+
+function renderStats() {
+  var act = active();
+  var risk = 0;
+  act.forEach(function(t){ var p=getProg(t.name); if(p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1) risk++; });
+  var onb = TRAINEES.filter(function(t){ return t.status==='Onboarded' || t.status==='Completed'; }).length;
+  var scores = [];
+  PROGRESS.forEach(function(p){ if(p['Avg Score']) scores.push(parseFloat(p['Avg Score'])); });
+  var avg = scores.length ? (scores.reduce(function(a,b){return a+b;},0)/scores.length).toFixed(2) : '--';
+  setText('stat-active', act.length);
+  setText('stat-avg', avg);
+  setText('stat-risk', risk);
+  setText('stat-onb', onb);
+}
+
+function setText(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
+
+function renderList() {
+  var list = document.getElementById('trainee-list');
+  if (!list) return;
+  var act = active();
+  if (!act.length) { list.innerHTML='<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No active trainees</div>'; return; }
+  list.innerHTML = '';
+  act.forEach(function(t,i) {
+    var p = getProg(t.name);
+    var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
+    var last = p&&p['Last Training'] ? 'Last: '+p['Last Training'] : 'No sessions yet';
+    var days = p&&p['Days Since'] ? ' \u00b7 '+p['Days Since']+' days ago' : '';
+    var risk = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
+    var col = AVC[i%AVC.length];
+    var row = document.createElement('div');
+    row.className = 'trow';
+    row.innerHTML = '<div class="av '+col+'">'+ini+'</div>'
+      +'<div class="ti"><div class="tn">'+t.name+'</div><div class="tm">'+last+days+'</div></div>'
+      +(risk?'<span class="bdg br">\u26a0 At risk</span>':'<span class="bdg ba">'+(p&&p.Status?p.Status:'In progress')+'</span>')
+      +'<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
+    row.onclick = (function(n){ return function(){ openProfile(n); }; })(t.name);
+    list.appendChild(row);
+  });
+}
+
+function openProfile(name) {
+  var t = getT(name), p = getProg(name);
+  if (!t) return;
+  var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
+  var col = AVC[Math.abs((name.charCodeAt(0)||0)+(name.charCodeAt(1)||0))%AVC.length];
+  var avg = p&&p['Avg Score']?p['Avg Score']:'\u2014';
+  var last = p&&p['Last Training']?p['Last Training']:'\u2014';
+  var ot = p&&p['On Time Score']?Math.round(p['On Time Score']*100)+'%':'\u2014';
+  var note = p&&p['Latest Note']?p['Latest Note']:'No notes yet.';
+  var risk = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
+  var di = doneIdx(p);
+  var allDone = di>=4||t.status==='Completed'||t.status==='Onboarded';
+  var scr = document.getElementById('s-profile');
+  scr.innerHTML = '';
+
+  // header
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn'); bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>'; bb.onclick=function(){go('s-home');};
+  var bt = ce('div','btitle'); bt.textContent='Trainee profile';
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+
+  // hero
+  var hero = ce('div','thero');
+  var av = ce('div','av avlg '+col); av.textContent=ini;
+  var hi = ce('div');
+  var hn = ce('div','thn'); hn.textContent=name;
+  var hb = ce('span','bdg '+(allDone?'bt':risk?'br':'ba')); hb.textContent=allDone?'All sessions done':risk?'\u26a0 At risk':'In progress';
+  hi.appendChild(hn); hi.appendChild(hb); hero.appendChild(av); hero.appendChild(hi); scr.appendChild(hero);
+
+  // content
+  var c = ce('div','pad'); c.style.paddingTop='0';
+
+  if (risk&&!allDone) { var al=ce('div','alrt ar'); al.textContent='\u26a0 At risk \u2014 '+(p['Days Since']||'')+' days since last session.'; c.appendChild(al); }
+  if (allDone) { var al=ce('div','alrt ag'); al.textContent='All sessions complete.'; c.appendChild(al); }
+
+  var sg = ce('div','sgrid');
+  sg.innerHTML='<div class="scard"><div class="slbl">Avg score</div><div class="sval">'+avg+'</div></div>'
+    +'<div class="scard"><div class="slbl">Last session</div><div class="sval" style="font-size:16px">'+last+'</div></div>'
+    +'<div class="scard"><div class="slbl">On time</div><div class="sval">'+ot+'</div></div>';
+  c.appendChild(sg);
+
+  var nl = ce('div','secl'); nl.textContent='Latest note'; c.appendChild(nl);
+  var nb = ce('div','nbox'); nb.textContent=note; c.appendChild(nb);
+
+  if (!allDone) {
+    var sl = ce('div','secl'); sl.textContent='Sessions remaining'; c.appendChild(sl);
+    for (var i=di+1;i<PIPELINE.length;i++) {
+      var s=PIPELINE[i];
+      var lk = ce('a','flink'); lk.href=s.url; lk.target='_blank';
+      lk.innerHTML='<div><div class="fln">'+s.label+'</div><div class="fls">Open Google Form</div></div>'
+        +'<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>';
+      c.appendChild(lk);
+    }
+  }
+
+  var ol = ce('div','secl'); ol.style.marginTop='16px'; ol.textContent='Outcome'; c.appendChild(ol);
+  var obs = ce('div','obtns');
+  var bc2 = ce('button','bc'); bc2.textContent='\u2713 Completed'; bc2.onclick=(function(n){ return function(){ markComplete(n); }; })(name);
+  var bi2 = ce('button','bi'); bi2.textContent='\u2717 Did not complete'; bi2.onclick=(function(n){ return function(){ markDNC(n); }; })(name);
+  obs.appendChild(bc2); obs.appendChild(bi2); c.appendChild(obs);
+  var om = ce('div','omsg'); om.id='omsg'; c.appendChild(om);
+
+  if (allDone) {
+    var ob = ce('button','bon'); ob.textContent='\uD83C\uDF89 Onboard '+t.firstName; ob.onclick=(function(n){ return function(){ openOnboard(n); }; })(name);
+    c.appendChild(ob);
+  }
+
+  var eb = ce('button','bem'); eb.style.marginTop='8px';
+  eb.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email '+t.firstName;
+  eb.onclick=(function(n){ return function(){ openEmail(n); }; })(name);
+  c.appendChild(eb);
+
+  scr.appendChild(c);
+  go('s-profile');
+}
+
+function markComplete(name) {
+  var el=document.getElementById('omsg');
+  if(el){el.style.display='block';el.style.background='#E1F5EE';el.style.color='#085041';el.textContent='\u2713 Marked as completed';}
+  writeStatus(name,'Completed');
+}
+
+function markDNC(name) {
+  if(!confirm('Mark '+name+' as did not complete and remove from dashboard?')) return;
+  writeStatus(name,'Did not complete');
+  for(var i=0;i<TRAINEES.length;i++) if(TRAINEES[i].name===name){TRAINEES[i].status='Did not complete';break;}
+  go('s-home'); renderList(); renderStats();
+}
+
+function writeStatus(name,status) {
+  fetch(SHEET+'?action=updateStatus&name='+encodeURIComponent(name)+'&status='+encodeURIComponent(status))
+    .then(function(r){return r.json();})
+    .then(function(d){console.log('Status:',d);})
+    .catch(function(e){console.error(e);});
+}
+
+function openOnboard(name) {
+  var t=getT(name);
+  var scr=document.getElementById('s-onboard'); scr.innerHTML='';
+  var h=ce('div','bhdr');
+  var bb=ce('button','bbtn'); bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>'; bb.onclick=function(){openProfile(name);};
+  var bt=ce('div','btitle'); bt.textContent='Onboard '+name;
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+  var c=ce('div','pad');
+  var al=ce('div','alrt ag'); al.style.marginBottom='20px'; al.textContent='Opens a welcome email in Gmail, ready to send.'; c.appendChild(al);
+  c.innerHTML+='<div class="ifl"><label class="ilbl">Onboarding day 1 \u2014 tech, mech &amp; shadowing</label><input class="iel" id="ob1" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
+    +'<div class="ifl"><label class="ilbl">Onboarding day 2 \u2014 loading, simulation &amp; jobs</label><input class="iel" id="ob2" type="text" placeholder="e.g. Tuesday 3 June 2026"></div>';
+  var btn=ce('button','bon'); btn.textContent='\u2709 Open welcome email';
+  btn.onclick=(function(n,fn){ return function(){ doOnboard(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
+  c.appendChild(btn); scr.appendChild(c);
+  go('s-onboard');
+}
+
+function doOnboard(name,first) {
+  var d1=document.getElementById('ob1').value.trim()||'[DATE 1]';
+  var d2=document.getElementById('ob2').value.trim()||'[DATE 2]';
+  writeStatus(name,'Onboarded');
+  var subj='Welcome to Pedal Me!';
+  var body='Dear '+first+',\n\nCongratulations on passing your assessment to become a rider at Pedal Me.\n\nHere are your onboarding days:\n\n'
+    +d1+' \u2014 Tech, mech training and shadowing.\n\n'
+    +d2+' \u2014 Loading training, simulation job, lunch jobs whilst being shadowed and solo jobs if you stay on later.\n\n'
+    +'Employee Registration\nhttps://docs.google.com/forms/d/1eqUTG1XOEv294_eXA8NR1d435MYpDa2fLTGwggRUGCE/edit?ts=664b6b49\n\n'
+    +'Equal Opportunities Monitoring Form\nhttps://docs.google.com/forms/d/e/1FAIpQLSemkytdEyh0nNdSkXCXLSSveyTR2Kjfcxx0mdM6jvIng96s2w/viewform\n\n'
+    +'Medical Questionnaire\nhttps://forms.gle/tVzw1eyGradV4nry5\n\n'
+    +'DBS Check\nhttps://www.hr-platform.co.uk/individual/application-login/?s1HjktpHdt90VmqvYMuF2U3PtUnQ7gxJ2kSPTpKAxLKb%2Fr%2B3adgiv9zHZUCM5WZkzzXGLbFV6m6x%2F6Zd%2FDGMWINCe8YSxht7oBmC%2F%2B6G1AlQQ4xI7ExcOQRk4MwyaZ64\n\n'
+    +'More info on DBS: https://www.gov.uk/government/collections/dbs-checking-service-guidance--2\n\n'
+    +'You should also receive an email with a link to Deputy for shift scheduling.\n\nThanks,\n'+TRAINER;
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body),'_blank');
+}
+
+function openEmail(name) {
+  var t=getT(name), p=getProg(name);
+  var di2=doneIdx(p);
+  var scr=document.getElementById('s-email'); scr.innerHTML='';
+  var h=ce('div','bhdr');
+  var bb=ce('button','bbtn'); bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>'; bb.onclick=function(){openProfile(name);};
+  var bt=ce('div','btitle'); bt.textContent='Email '+name;
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+  var c=ce('div','pad');
+
+  // Session select
+  var sd=ce('div','ifl');
+  var sl=ce('label','ilbl'); sl.textContent='Session';
+  var ss=ce('select','iel'); ss.id='e-sess';
+  var start=di2+1; if(start>=PIPELINE.length) start=0;
+  for(var i=start;i<PIPELINE.length;i++){var op=document.createElement('option');op.value=PIPELINE[i].key;op.textContent=PIPELINE[i].label;ss.appendChild(op);}
+  sd.appendChild(sl); sd.appendChild(ss); c.appendChild(sd);
+
+  c.innerHTML+='<div class="ifl"><label class="ilbl">Date</label><input class="iel" id="e-date" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
+    +'<div class="ifl"><label class="ilbl">Time</label><input class="iel" id="e-time" type="text" placeholder="e.g. 9:00am"></div>'
+    +'<div class="ifl"><label class="ilbl">Location</label>'
+    +'<select class="iel" id="e-loc">'
+    +'<option value="Pedal Me HQ, 52 Ewer St, Southwark SE1 0NR\nMap: https://maps.app.goo.gl/8NiWRD7YFhbwQ5p66">Pedal Me HQ, Ewer St</option>'
+    +'<option value="Newington Gardens, Harper Rd, London SE1 6PP\nMap: https://maps.app.goo.gl/ghWSsXdy3LXYMyDg9">Newington Gardens, Harper Rd</option>'
+    +'<option value="[LOCATION - please add details]">Other (complete in email)</option>'
+    +'</select></div>';
+
+  var btn=ce('button','bpr'); btn.textContent='\u2709 Open email';
+  btn.onclick=(function(n,fn){ return function(){ doEmail(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
+  c.appendChild(btn); scr.appendChild(c);
+  go('s-email');
+}
+
+function doEmail(name,first) {
+  var sk=document.getElementById('e-sess').value;
+  var date=document.getElementById('e-date').value.trim()||'[DATE]';
+  var time=document.getElementById('e-time').value.trim()||'[TIME]';
+  var loc=document.getElementById('e-loc').value;
+  var s=SINFO[sk];
+  var subj='Pedal Me training \u2014 '+s.name;
+  var body='Hi '+first+',\n\nHere are the details for your '+s.name+' session.\n\n'
+    +'Date: '+date+'\nTime: '+time+'\nLocation: '+loc+'\n\n'
+    +s.prep+(s.dur?' '+s.dur:'')+'\n\nPlease let us know if you have any questions.\n\nThanks,\n'+TRAINER;
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body),'_blank');
+}
+
+function ce(tag,cls) { var e=document.createElement(tag); if(cls) e.className=cls; return e; }
+</script>
+</body>
+</html>
