@@ -107,28 +107,7 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       <div class="scard"><div class="slbl">At risk</div><div class="sval" id="stat-risk" style="color:var(--red)">—</div><div class="ssub">need attention</div></div>
       <div class="scard"><div class="slbl">Onboarded</div><div class="sval" id="stat-onb" style="color:var(--green)">—</div><div class="ssub">this cohort</div></div>
     </div>
-    <div class="secl">Log a session</div>
-    <div class="fgrid">
-      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLSdAluEwZqNjUyjsOiwei7aI5NzzpWmBi6t9UeT5yNRoLLtr7g/viewform" target="_blank">
-        <div class="fi ig"><svg viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M14 4H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V8l-4-4z"/></svg></div>
-        <div class="fn">Intro</div><div class="fd">First meeting</div><div class="fe">&#8599; Google Form</div>
-      </a>
-      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLScYqdrfZKH7Zywn-mC4j3m3nm3eivvxUBRLNkaXh8c0Z5Phcg/viewform" target="_blank">
-        <div class="fi ig"><svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17l4-10h6l4 10"/></svg></div>
-        <div class="fn">OR 1/2</div><div class="fd">Off-road skills</div><div class="fe">&#8599; Google Form</div>
-      </a>
-      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLSfNvaxoocxXAm3xUaVcwmi3sw_T6jNwfVoXo1QUnCrpD2XvNQ/viewform" target="_blank">
-        <div class="fi ib"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
-        <div class="fn">1:1 session</div><div class="fd">On-road coaching</div><div class="fe">&#8599; Google Form</div>
-      </a>
-      <a class="fc" href="https://docs.google.com/forms/d/e/1FAIpQLSfgTFOaX0l9BWmgvBBjjWVpIIcbULS_CHFznI1xMFHPLdW3gQ/viewform" target="_blank">
-        <div class="fi ia"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6l9-3 9 3M3 18l9 3 9-3"/></svg></div>
-        <div class="fn">Navigation</div><div class="fd">Route assessment</div><div class="fe">&#8599; Google Form</div>
-      </a>
-      <a class="fc" href="https://docs.google.com/forms/d/1HFlUTqBLIAYrvyfNjNK4ZMcOBsDKW4lD4p4Me7l7PRA/viewform" target="_blank">
-        <div class="fi ib"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-6 4 2 7-6-4-6 4 2-7-6-4h7z"/></svg></div>
-        <div class="fn">Assessment</div><div class="fd">Final ride</div><div class="fe">&#8599; Google Form</div>
-      </a>
+  
     </div>
     <div class="secl">Trainees</div>
     <div class="tlist" id="trainee-list">
