@@ -204,9 +204,7 @@ function hasProgress(name) {
 }
 
 function starterName(s) {
-  var first = s['First Name'] || s['First name'] || '';
-  var surname = s['Surname'] || s['Last Name'] || '';
-  return (first + ' ' + surname).trim();
+  return (s['Name'] || '').toString().trim();
 }
 
 function renderNewStarters() {
@@ -227,14 +225,11 @@ function renderNewStarters() {
 
   starters.forEach(function(s, i) {
     var name = starterName(s);
-    var first = s['First Name'] || '';
-    var surname = s['Surname'] || '';
-    var ini = ((first.charAt(0) || '') + (surname.charAt(0) || '')).toUpperCase();
+    var parts = name.split(' ');
+    var ini = ((parts[0] || '').charAt(0) + (parts[1] || '').charAt(0)).toUpperCase();
     var col = AVC[i % AVC.length];
 
-    var sub = s['Available to Start Training']
-      ? 'Training: ' + s['Available to Start Training']
-      : 'No sessions yet';
+    var sub = s['Stage'] || 'Applied';
 
     var row = document.createElement('div');
     row.className = 'trow';
