@@ -125,6 +125,7 @@ var TRAINER = '';
 var SHEET = 'https://script.google.com/macros/s/AKfycbyL18ZIrnzSRtWMuaTszmVTbYViRj9SSlKINY-M1KqvEIlI1x6GQpOKFQ74nL9Dz_P2/exec';
 var TRAINEES = [];
 var PROGRESS = [];
+var DATA_LOADED = false;
 var AVC = ['av1','av2','av3','av4','av5','av6'];
 
 var PIPELINE = [
@@ -146,7 +147,10 @@ var SINFO = {
 document.getElementById('continue-btn').onclick = function() {
   TRAINER = document.getElementById('trainer-sel').value;
   go('s-home');
-  loadData();
+
+  if (!DATA_LOADED) {
+    loadData();
+  }
 };
 
 function go(id) {
@@ -175,6 +179,7 @@ function loadData() {
     .then(function(d){
       TRAINEES = d.trainees || [];
       PROGRESS = d.progress || [];
+      DATA_LOADED = true;
       renderList();
       renderStats();
     })
@@ -189,6 +194,7 @@ function loadViaJsonp() {
   jsonp(SHEET + '?action=getAll', function(d) {
     TRAINEES = d.trainees || [];
     PROGRESS = d.progress || [];
+    DATA_LOADED = true;
     renderList();
     renderStats();
   });
@@ -440,6 +446,7 @@ function doEmail(name,first) {
 }
 
 function ce(tag,cls) { var e=document.createElement(tag); if(cls) e.className=cls; return e; }
+loadData();
 </script>
 </body>
 </html>
