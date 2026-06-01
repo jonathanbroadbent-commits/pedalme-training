@@ -381,8 +381,7 @@ function renderList() {
     row.className = 'trow';
     row.innerHTML = '<div class="av '+col+'">'+ini+'</div>'
       +'<div class="ti"><div class="tn">'+t.name+'</div><div class="tm">'+last+days+'</div></div>'
-      +(risk?'<span class="bdg br">\u26a0 At risk</span>':'<span class="bdg ba">'+(p&&p.Status?p.Status:'In progress')+'</span>')
-      +'<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
+      +(risk?'<span class="bdg br">\u26a0 At risk</span>':'<span class="bdg ba">'+(t.status || 'Prospect')+'</span>')      +'<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
     row.onclick = (function(n){ return function(){ openProfile(n); }; })(t.name);
     list.appendChild(row);
   });
