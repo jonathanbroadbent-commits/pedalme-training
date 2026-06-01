@@ -442,11 +442,49 @@ function openProfile(name) {
     }
   }
 
-  var ol = ce('div','secl'); ol.style.marginTop='16px'; ol.textContent='Outcome'; c.appendChild(ol);
-  var obs = ce('div','obtns');
-  var bc2 = ce('button','bc'); bc2.textContent='\u2713 Completed'; bc2.onclick=(function(n){ return function(){ markComplete(n); }; })(name);
-  var bi2 = ce('button','bi'); bi2.textContent='\u2717 Did not complete'; bi2.onclick=(function(n){ return function(){ markDNC(n); }; })(name);
-  obs.appendChild(bc2); obs.appendChild(bi2); c.appendChild(obs);
+var ol = ce('div','secl');
+ol.style.marginTop='16px';
+ol.textContent='Change status';
+c.appendChild(ol);
+
+var sd = ce('div','ifl');
+var sel = ce('select','iel');
+sel.id = 'status-select';
+
+[
+  'Prospect',
+  'Intro booked',
+  'Intro only',
+  'New starter',
+  'Active',
+  'Completed',
+  'Did not complete',
+  'Onboarded'
+].forEach(function(s){
+  var op = document.createElement('option');
+  op.value = s;
+  op.textContent = s;
+  if (t.status === s) op.selected = true;
+  sel.appendChild(op);
+});
+
+sd.appendChild(sel);
+c.appendChild(sd);
+
+var sb = ce('button','bon');
+sb.textContent = 'Save status';
+sb.onclick = function(){
+  var newStatus = document.getElementById('status-select').value;
+  writeStatus(name,newStatus);
+  t.status = newStatus;
+  openProfile(name);
+};
+
+c.appendChild(sb);
+
+var om = ce('div','omsg');
+om.id='omsg';
+c.appendChild(om);
   var om = ce('div','omsg'); om.id='omsg'; c.appendChild(om);
 
   if (allDone) {
