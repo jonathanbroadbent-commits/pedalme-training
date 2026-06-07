@@ -402,7 +402,7 @@ function openProfile(name) {
   var note = p&&p['Latest Note']?p['Latest Note']:'No notes yet.';
   var risk = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
   var di = doneIdx(p);
-  var allDone = di>=4||t.status==='Completed'||t.status==='Onboarded';
+  var allDone = t.status==='Completed'||t.status==='Onboarded';
   var scr = document.getElementById('s-profile');
   scr.innerHTML = '';
 
