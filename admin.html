@@ -405,16 +405,9 @@ function openProfile(name) {
   sg.appendChild(otCard);
   c.appendChild(sg);
 
-  // latest note
+// latest note
   var nl = ce('div','secl'); nl.textContent = 'Latest note'; c.appendChild(nl);
   var nb = ce('div','nbox'); nb.textContent = note; c.appendChild(nb);
-
-  // Add a session
-var ab = ce('button','bon'); ab.textContent = '+ Add a session';
-  ab.style.marginBottom = '16px';
-  ab.onclick = (function(n){ return function(){ openAddSession(n); }; })(name);
-  c.appendChild(ab);
-    
 
   // change status
   var ol = ce('div','secl'); ol.style.marginTop = '16px'; ol.textContent = 'Change status'; c.appendChild(ol);
@@ -435,7 +428,12 @@ var ab = ce('button','bon'); ab.textContent = '+ Add a session';
     t.status = newStatus;
     openProfile(name);
   };
-  c.appendChild(sb);
+c.appendChild(sb);
+
+  var ab = ce('button','bon'); ab.textContent = '+ Add a session';
+  ab.style.marginTop = '8px';
+  ab.onclick = (function(n){ return function(){ openAddSession(n); }; })(name);
+  c.appendChild(ab);
 
   var om = ce('div','omsg'); om.id = 'omsg'; c.appendChild(om);
 
