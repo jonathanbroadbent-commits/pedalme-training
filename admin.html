@@ -619,7 +619,8 @@ function openSessions(name) {
   var traineeSessions = SESSIONS.filter(function(s) {
     return String(s['Trainee'] || '').trim().toLowerCase() === name.toLowerCase();
   });
-
+console.log('Looking for:', name);
+console.log('Session trainees:', SESSIONS.map(function(s){ return s['Trainee']; }));
   traineeSessions.sort(function(a, b) {
     return new Date(b['Date']) - new Date(a['Date']);
   });
