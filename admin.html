@@ -410,15 +410,10 @@ function openProfile(name) {
   var nb = ce('div','nbox'); nb.textContent = note; c.appendChild(nb);
 
   // sessions remaining
-  if (!allDone) {
-    var sl = ce('div','secl'); sl.textContent = 'Sessions remaining'; c.appendChild(sl);
-    for (var i = di+1; i < PIPELINE.length; i++) {
-      var s = PIPELINE[i];
-      var lk = ce('a','flink'); lk.href = s.url; lk.target = '_blank';
-      lk.innerHTML =
-        '<div><div class="fln">'+s.label+'</div><div class="fls">Open Google Form</div></div>'+
-        '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>';
-      c.appendChild(lk);
+var ab = ce('button','bon'); ab.textContent = '+ Add a session';
+  ab.style.marginBottom = '16px';
+  ab.onclick = (function(n){ return function(){ openAddSession(n); }; })(name);
+  c.appendChild(ab);
     }
   }
 
@@ -658,7 +653,30 @@ function fmtDate(val) {
   if (isNaN(d.getTime())) return String(val);
   return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();
 }
+function openAddSession(name) {
+  var scr = document.getElementById('s-sessions');
+  scr.innerHTML = '';
 
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ openProfile(name); };
+  var bt = ce('div','btitle'); bt.textContent = 'Add a session';
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+
+  var c = ce('div','pad');
+
+  PIPELINE.forEach(function(s) {
+    var lk = ce('a','flink'); lk.href = s.url; lk.target = '_blank';
+    lk.innerHTML =
+      '<div><div class="fln">'+s.label+'</div><div class="fls">Open Google Form</div></div>'+
+      '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>';
+    c.appendChild(lk);
+  });
+
+  scr.appendChild(c);
+  go('s-sessions');
+}
 function ce(tag, cls) {
   var e = document.createElement(tag);
   if (cls) e.className = cls;
