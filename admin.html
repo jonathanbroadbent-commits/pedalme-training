@@ -409,7 +409,7 @@ function openProfile(name) {
   var nl = ce('div','secl'); nl.textContent = 'Latest note'; c.appendChild(nl);
   var nb = ce('div','nbox'); nb.textContent = note; c.appendChild(nb);
 
-  // sessions remaining
+  // Add a session
 var ab = ce('button','bon'); ab.textContent = '+ Add a session';
   ab.style.marginBottom = '16px';
   ab.onclick = (function(n){ return function(){ openAddSession(n); }; })(name);
