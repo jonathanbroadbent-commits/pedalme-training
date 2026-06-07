@@ -454,7 +454,6 @@ var ab = ce('button','bon'); ab.textContent = '+ Add a session';
   scr.appendChild(c);
   go('s-profile');
 }
-
 function writeStatus(name, status) {
   fetch(SHEET+'?action=updateStatus&name='+encodeURIComponent(name)+'&status='+encodeURIComponent(status))
     .then(function(r){ return r.json(); })
