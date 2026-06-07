@@ -131,6 +131,7 @@ var SHEET = 'https://script.google.com/macros/s/AKfycbyL18ZIrnzSRtWMuaTszmVTbYVi
 var TRAINEES = [];
 var PROGRESS = [];
 var NEW_STARTERS = [];
+var SESSIONS = [];
 var DATA_LOADED = false;
 var AVC = ['av1','av2','av3','av4','av5','av6'];
 
@@ -184,10 +185,11 @@ function loadData() {
   fetch(SHEET + '?action=getAll')
     .then(function(r){ return r.json(); })
     .then(function(d){
-      TRAINEES = d.trainees || [];
-      PROGRESS = d.progress || [];
-      NEW_STARTERS = d.newStarters || [];
-      DATA_LOADED = true;
+     TRAINEES = d.trainees || [];
+PROGRESS = d.progress || [];
+NEW_STARTERS = d.newStarters || [];
+SESSIONS = d.sessions || [];
+DATA_LOADED = true;
 
       renderNewStarters();
       renderList();
