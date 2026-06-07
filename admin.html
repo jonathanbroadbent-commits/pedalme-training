@@ -428,8 +428,7 @@ function openProfile(name) {
 
   var sg = ce('div','sgrid');
   sg.innerHTML='<div class="scard"><div class="slbl">Avg score</div><div class="sval">'+avg+'</div></div>'
-+'<div class="scard" style="cursor:pointer" onclick="openSessions(\''+name+'\')"><div class="slbl">Last session ›</div><div class="sval" style="font-size:16px">'+last+'</div></div>'    +'<div class="scard"><div class="slbl">On time</div><div class="sval">'+ot+'</div></div>';
-  c.appendChild(sg);
++'<div class="scard" style="cursor:pointer" id="last-session-card"><div class="slbl">Last session ›</div><div class="sval" style="font-size:16px">'+last+'</div></div>'  c.appendChild(sg);
 
   var nl = ce('div','secl'); nl.textContent='Latest note'; c.appendChild(nl);
   var nb = ce('div','nbox'); nb.textContent=note; c.appendChild(nb);
@@ -686,7 +685,8 @@ function openSessionDetail(name, s) {
     '<div class="scard"><div class="slbl">Date</div><div class="sval" style="font-size:16px">' + Utilities_formatDate(s['Date']) + '</div></div>' +
     '<div class="scard"><div class="slbl">Score</div><div class="sval">' + (s['Overall Rating'] ? s['Overall Rating'] + '/5' : '—') + '</div></div>';
   c.appendChild(sg);
-
+c.appendChild(sg);
+document.getElementById('last-session-card').onclick = function(){ openSessions(name); };
   // Notes
   var noteFields = ['Notes','Observation','Communication','Positioning','Priority',
                     'Anticipation','Progress','Control','Demeanour',
