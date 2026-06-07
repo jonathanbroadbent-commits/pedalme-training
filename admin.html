@@ -308,8 +308,9 @@ function openStarterProfile(s) {
   };
   c.appendChild(eb);
 
-  scr.appendChild(c);
-  go('s-profile');
+scr.appendChild(c);
+document.getElementById('last-session-card').onclick = function(){ openSessions(name); };
+go('s-profile');
 }
 function loadViaJsonp() {
   var list = document.getElementById('trainee-list');
