@@ -430,6 +430,9 @@ function openProfile(name) {
   sg.innerHTML='<div class="scard"><div class="slbl">Avg score</div><div class="sval">'+avg+'</div></div>'
 +'<div class="scard" style="cursor:pointer" id="last-session-card"><div class="slbl">Last session ›</div><div class="sval" style="font-size:16px">'+last+'</div></div>';
 c.appendChild(sg);
+  c.appendChild(sg);
+document.getElementById('last-session-card').onclick = function(){ openSessions(name); };
+var nl = ce('div','secl'); nl.textContent='Latest note'; c.appendChild(nl);
   var nl = ce('div','secl'); nl.textContent='Latest note'; c.appendChild(nl);
   var nb = ce('div','nbox'); nb.textContent=note; c.appendChild(nb);
 
