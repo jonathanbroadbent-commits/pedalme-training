@@ -124,6 +124,8 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 <div id="s-profile" class="screen"></div>
 <div id="s-email" class="screen"></div>
 <div id="s-onboard" class="screen"></div>
+<div id="s-sessions" class="screen"></div>
+<div id="s-session-detail" class="screen"></div>
 
 <script>
 var TRAINER = '';
@@ -426,8 +428,7 @@ function openProfile(name) {
 
   var sg = ce('div','sgrid');
   sg.innerHTML='<div class="scard"><div class="slbl">Avg score</div><div class="sval">'+avg+'</div></div>'
-    +'<div class="scard"><div class="slbl">Last session</div><div class="sval" style="font-size:16px">'+last+'</div></div>'
-    +'<div class="scard"><div class="slbl">On time</div><div class="sval">'+ot+'</div></div>';
++'<div class="scard" style="cursor:pointer" onclick="openSessions(\''+name+'\')"><div class="slbl">Last session ›</div><div class="sval" style="font-size:16px">'+last+'</div></div>'    +'<div class="scard"><div class="slbl">On time</div><div class="sval">'+ot+'</div></div>';
   c.appendChild(sg);
 
   var nl = ce('div','secl'); nl.textContent='Latest note'; c.appendChild(nl);
@@ -602,7 +603,117 @@ function doEmail(name,first) {
     +s.prep+(s.dur?' '+s.dur:'')+'\n\nPlease let us know if you have any questions.\n\nThanks,\n'+TRAINER;
   window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body),'_blank');
 }
+function openSessions(name) {
+  var scr = document.getElementById('s-sessions');
+  scr.innerHTML = '';
 
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ openProfile(name); };
+  var bt = ce('div','btitle'); bt.textContent = 'Sessions — ' + name;
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+
+  var c = ce('div','pad');
+
+  var traineeSessions = SESSIONS.filter(function(s) {
+    return String(s['Trainee'] || '').trim().toLowerCase() === name.toLowerCase();
+  });
+
+  traineeSessions.sort(function(a, b) {
+    return new Date(b['Date']) - new Date(a['Date']);
+  });
+
+  if (!traineeSessions.length) {
+    var empty = ce('div');
+    empty.style.cssText = 'padding:20px;text-align:center;color:var(--g400);font-size:14px';
+    empty.textContent = 'No sessions found';
+    c.appendChild(empty);
+  } else {
+    var list = ce('div','tlist');
+    traineeSessions.forEach(function(s, i) {
+      var row = ce('div','trow');
+      row.style.cursor = 'pointer';
+
+      var date = s['Date'] ? Utilities_formatDate(s['Date']) : '—';
+      var rating = s['Overall Rating'] || '—';
+
+      row.innerHTML =
+        '<div class="ti">' +
+          '<div class="tn">' + (s['Source'] || '—') + '</div>' +
+          '<div class="tm">' + date + '</div>' +
+        '</div>' +
+        '<span class="bdg bgy">' + (rating !== '—' ? rating + ' / 5' : '—') + '</span>' +
+        '<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
+
+      row.onclick = (function(sess){ return function(){ openSessionDetail(name, sess); }; })(s);
+      list.appendChild(row);
+    });
+    c.appendChild(list);
+  }
+
+  scr.appendChild(c);
+  go('s-sessions');
+}
+
+function Utilities_formatDate(val) {
+  if (!val) return '—';
+  var d = new Date(val);
+  if (isNaN(d.getTime())) return String(val);
+  var day   = ('0' + d.getDate()).slice(-2);
+  var month = ('0' + (d.getMonth()+1)).slice(-2);
+  var year  = d.getFullYear();
+  return day + '/' + month + '/' + year;
+}
+
+function openSessionDetail(name, s) {
+  var scr = document.getElementById('s-session-detail');
+  scr.innerHTML = '';
+
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ openSessions(name); };
+  var bt = ce('div','btitle'); bt.textContent = s['Source'] || 'Session';
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+
+  var c = ce('div','pad');
+
+  // Date + score
+  var sg = ce('div','sgrid');
+  sg.innerHTML =
+    '<div class="scard"><div class="slbl">Date</div><div class="sval" style="font-size:16px">' + Utilities_formatDate(s['Date']) + '</div></div>' +
+    '<div class="scard"><div class="slbl">Score</div><div class="sval">' + (s['Overall Rating'] ? s['Overall Rating'] + '/5' : '—') + '</div></div>';
+  c.appendChild(sg);
+
+  // Notes
+  var noteFields = ['Notes','Observation','Communication','Positioning','Priority',
+                    'Anticipation','Progress','Control','Demeanour',
+                    'Stops','Starts','Slow Riding','Full Lock','Emergency',
+                    'Manual Handling','Walking Turn','Look Back & Signal','Slalom & U Turns'];
+
+  var hasNotes = false;
+  noteFields.forEach(function(field) {
+    var val = s[field];
+    if (val && String(val).trim()) {
+      if (!hasNotes) {
+        var nl = ce('div','secl'); nl.textContent = 'Notes'; c.appendChild(nl);
+        hasNotes = true;
+      }
+      var nb = ce('div','nbox');
+      nb.innerHTML = '<strong>' + field + ':</strong> ' + String(val).trim();
+      c.appendChild(nb);
+    }
+  });
+
+  if (!hasNotes) {
+    var nl = ce('div','secl'); nl.textContent = 'Notes'; c.appendChild(nl);
+    var nb = ce('div','nbox'); nb.textContent = 'No notes recorded.'; c.appendChild(nb);
+  }
+
+  scr.appendChild(c);
+  go('s-session-detail');
+}
 function ce(tag,cls) { var e=document.createElement(tag); if(cls) e.className=cls; return e; }
 loadData();
 </script>
