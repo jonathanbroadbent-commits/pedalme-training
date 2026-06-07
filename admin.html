@@ -22,21 +22,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g900);mi
 .pad{padding:20px}
 .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
 .scard{background:#fff;border-radius:var(--rmd);border:1px solid var(--g100);padding:14px 16px}
+.scard.tap{cursor:pointer}
+.scard.tap:active{background:var(--g50)}
 .slbl{font-size:12px;color:var(--g400);margin-bottom:4px;font-family:'DM Mono',monospace;letter-spacing:.02em}
 .sval{font-size:26px;font-weight:600;line-height:1}
 .ssub{font-size:12px;color:var(--g400);margin-top:4px}
 .secl{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--g400);margin-bottom:10px;font-family:'DM Mono',monospace}
-.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
-.fc{background:#fff;border-radius:var(--rmd);border:1px solid var(--g100);padding:16px 14px;cursor:pointer;text-align:left;transition:transform .12s;text-decoration:none;display:block}
-.fc:active{transform:scale(.97)}
-.fi{width:36px;height:36px;border-radius:var(--rsm);display:flex;align-items:center;justify-content:center;margin-bottom:10px}
-.fi svg{width:18px;height:18px;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.fn{font-size:14px;font-weight:600;color:var(--g900)}
-.fd{font-size:12px;color:var(--g400);margin-top:2px}
-.fe{font-size:11px;color:var(--g400);margin-top:8px}
-.ig{background:var(--green-light)}.ig svg{stroke:var(--green-dark)}
-.ib{background:var(--blue-light)}.ib svg{stroke:var(--blue)}
-.ia{background:var(--amber-light)}.ia svg{stroke:#854F0B}
 .tlist{display:flex;flex-direction:column;gap:8px}
 .trow{background:#fff;border-radius:var(--rmd);border:1px solid var(--g100);padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
 .trow:active{background:var(--g50)}
@@ -61,9 +52,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g900);mi
 .fln{font-size:15px;font-weight:500;color:var(--g900)}
 .fls{font-size:12px;color:var(--g400);margin-top:2px}
 .flink svg{width:16px;height:16px;stroke:var(--g400);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0}
-.obtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
-.bc{background:var(--green-light);color:var(--green-dark);border:1px solid #9FE1CB;border-radius:var(--rmd);padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
-.bi{background:var(--red-light);color:#791F1F;border:1px solid #F7C1C1;border-radius:var(--rmd);padding:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
 .bon{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--rlg);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px}
 .bem{width:100%;padding:14px;background:#fff;color:var(--g900);border:1px solid var(--g200);border-radius:var(--rlg);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
 .bpr{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--rlg);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px}
@@ -107,20 +95,18 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       <div class="scard"><div class="slbl">At risk</div><div class="sval" id="stat-risk" style="color:var(--red)">—</div><div class="ssub">need attention</div></div>
       <div class="scard"><div class="slbl">Onboarded</div><div class="sval" id="stat-onb" style="color:var(--green)">—</div><div class="ssub">this cohort</div></div>
     </div>
-  
     <div class="secl">New Starters</div>
-<div class="tlist" id="new-starters-list">
-  <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>
-</div>
-
-<div class="secl" style="margin-top:24px">In Progress</div>
-<div class="tlist" id="trainee-list">
-      <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading&#8230;</div>
+    <div class="tlist" id="new-starters-list">
+      <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>
+    </div>
+    <div class="secl" style="margin-top:24px">In Progress</div>
+    <div class="tlist" id="trainee-list">
+      <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>
     </div>
   </div>
 </div>
 
-<!-- DYNAMIC SCREENS (built by JS) -->
+<!-- DYNAMIC SCREENS -->
 <div id="s-profile" class="screen"></div>
 <div id="s-email" class="screen"></div>
 <div id="s-onboard" class="screen"></div>
@@ -138,28 +124,25 @@ var DATA_LOADED = false;
 var AVC = ['av1','av2','av3','av4','av5','av6'];
 
 var PIPELINE = [
-  {key:'intro',      label:'1. Intro',                url:'https://docs.google.com/forms/d/e/1FAIpQLSdAluEwZqNjUyjsOiwei7aI5NzzpWmBi6t9UeT5yNRoLLtr7g/viewform'},
-  {key:'1to1',       label:'2. 1:1 session',          url:'https://docs.google.com/forms/d/e/1FAIpQLSfNvaxoocxXAm3xUaVcwmi3sw_T6jNwfVoXo1QUnCrpD2XvNQ/viewform'},
-  {key:'or12',       label:'3. OR 1/2',               url:'https://docs.google.com/forms/d/e/1FAIpQLScYqdrfZKH7Zywn-mC4j3m3nm3eivvxUBRLNkaXh8c0Z5Phcg/viewform'},
-  {key:'nav',        label:'4. Navigation',           url:'https://docs.google.com/forms/d/e/1FAIpQLSfgTFOaX0l9BWmgvBBjjWVpIIcbULS_CHFznI1xMFHPLdW3gQ/viewform'},
-  {key:'assessment', label:'5. Assessment',           url:'https://docs.google.com/forms/d/1HFlUTqBLIAYrvyfNjNK4ZMcOBsDKW4lD4p4Me7l7PRA/viewform'}
+  {key:'intro',      label:'1. Intro',       url:'https://docs.google.com/forms/d/e/1FAIpQLSdAluEwZqNjUyjsOiwei7aI5NzzpWmBi6t9UeT5yNRoLLtr7g/viewform'},
+  {key:'1to1',       label:'2. 1:1 session', url:'https://docs.google.com/forms/d/e/1FAIpQLSfNvaxoocxXAm3xUaVcwmi3sw_T6jNwfVoXo1QUnCrpD2XvNQ/viewform'},
+  {key:'or12',       label:'3. OR 1/2',      url:'https://docs.google.com/forms/d/e/1FAIpQLScYqdrfZKH7Zywn-mC4j3m3nm3eivvxUBRLNkaXh8c0Z5Phcg/viewform'},
+  {key:'nav',        label:'4. Navigation',  url:'https://docs.google.com/forms/d/e/1FAIpQLSfgTFOaX0l9BWmgvBBjjWVpIIcbULS_CHFznI1xMFHPLdW3gQ/viewform'},
+  {key:'assessment', label:'5. Assessment',  url:'https://docs.google.com/forms/d/1HFlUTqBLIAYrvyfNjNK4ZMcOBsDKW4lD4p4Me7l7PRA/viewform'}
 ];
 
 var SINFO = {
-  'intro':      {name:'Intro',                  prep:'Please bring your own bike.',                                         dur:''},
-  '1to1':       {name:'1:1 session',             prep:'Please be prepared for the weather and bring your own bike.',          dur:'The session will be approximately 1.5 hours.'},
-  'or12':       {name:'OR 1/2',                  prep:'Please be prepared for the weather and bring water and snacks.',       dur:'The session will be approximately 2.5 hours.'},
-  'nav':        {name:'Navigation & Assessment', prep:'Please be prepared for the weather and bring your own bike.',          dur:'The session will be approximately 2.5 hours.'},
-  'assessment': {name:'Assessment',              prep:'Please be prepared for the weather and bring your own bike.',          dur:'The session will be approximately 2.5 hours.'}
+  'intro':      {name:'Intro',                  prep:'Please bring your own bike.',                                        dur:''},
+  '1to1':       {name:'1:1 session',             prep:'Please be prepared for the weather and bring your own bike.',         dur:'The session will be approximately 1.5 hours.'},
+  'or12':       {name:'OR 1/2',                  prep:'Please be prepared for the weather and bring water and snacks.',      dur:'The session will be approximately 2.5 hours.'},
+  'nav':        {name:'Navigation & Assessment', prep:'Please be prepared for the weather and bring your own bike.',         dur:'The session will be approximately 2.5 hours.'},
+  'assessment': {name:'Assessment',              prep:'Please be prepared for the weather and bring your own bike.',         dur:'The session will be approximately 2.5 hours.'}
 };
 
 document.getElementById('continue-btn').onclick = function() {
   TRAINER = document.getElementById('trainer-sel').value;
   go('s-home');
-
-  if (!DATA_LOADED) {
-    loadData();
-  }
+  if (!DATA_LOADED) loadData();
 };
 
 function go(id) {
@@ -187,12 +170,11 @@ function loadData() {
   fetch(SHEET + '?action=getAll')
     .then(function(r){ return r.json(); })
     .then(function(d){
-     TRAINEES = d.trainees || [];
-PROGRESS = d.progress || [];
-NEW_STARTERS = d.newStarters || [];
-SESSIONS = d.sessions || [];
-DATA_LOADED = true;
-
+      TRAINEES    = d.trainees    || [];
+      PROGRESS    = d.progress    || [];
+      NEW_STARTERS = d.newStarters || [];
+      SESSIONS    = d.sessions    || [];
+      DATA_LOADED = true;
       renderNewStarters();
       renderList();
       renderStats();
@@ -203,129 +185,17 @@ DATA_LOADED = true;
     });
 }
 
-function hasProgress(name) {
-  return !!getProg(name);
-}
-
-function starterName(s) {
-  return (s['Name'] || '').toString().trim();
-}
-
-function renderNewStarters() {
-  var list = document.getElementById('new-starters-list');
-  if (!list) return;
-
-  var starters = NEW_STARTERS.filter(function(s) {
-    var name = starterName(s);
-    return name && !hasProgress(name);
-  });
-
-  if (!starters.length) {
-    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No new starters waiting</div>';
-    return;
-  }
-
-  list.innerHTML = '';
-
-  starters.forEach(function(s, i) {
-    var name = starterName(s);
-    var parts = name.split(' ');
-    var ini = ((parts[0] || '').charAt(0) + (parts[1] || '').charAt(0)).toUpperCase();
-    var col = AVC[i % AVC.length];
-
-    var sub = s['Stage'] || 'Applied';
-
-    var row = document.createElement('div');
-    row.className = 'trow';
-    row.innerHTML =
-      '<div class="av '+col+'">'+ini+'</div>' +
-      '<div class="ti"><div class="tn">'+name+'</div><div class="tm">'+sub+'</div></div>' +
-      '<span class="bdg bgy">New Starter</span>' +
-      '<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
-
-    row.onclick = function() {
-      openStarterProfile(s);
-    };
-
-    list.appendChild(row);
-  });
-}
-
-function openStarterProfile(s) {
-  var name = starterName(s);
-  var first = s['First Name'] || name.split(' ')[0];
-  var surname = s['Surname'] || '';
-  var ini = ((first.charAt(0) || '') + (surname.charAt(0) || '')).toUpperCase();
-
-  var scr = document.getElementById('s-profile');
-  scr.innerHTML = '';
-
-  var h = ce('div','bhdr');
-  var bb = ce('button','bbtn');
-  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
-  bb.onclick = function(){ go('s-home'); };
-  var bt = ce('div','btitle');
-  bt.textContent = 'New starter';
-  h.appendChild(bb);
-  h.appendChild(bt);
-  scr.appendChild(h);
-
-  var hero = ce('div','thero');
-  var av = ce('div','av avlg av2');
-  av.textContent = ini;
-  var hi = ce('div');
-  var hn = ce('div','thn');
-  hn.textContent = name;
-  var hb = ce('span','bdg bgy');
-  hb.textContent = 'New Starter';
-  hi.appendChild(hn);
-  hi.appendChild(hb);
-  hero.appendChild(av);
-  hero.appendChild(hi);
-  scr.appendChild(hero);
-
-  var c = ce('div','pad');
-  c.style.paddingTop = '0';
-
-  var nb = ce('div','nbox');
-  nb.innerHTML =
-    '<strong>Email:</strong> ' + (s['Email'] || '—') + '<br>' +
-    '<strong>Phone:</strong> ' + (s['Phone Number'] || '—') + '<br>' +
-    '<strong>Right to work:</strong> ' + (s['Right to Work'] || '—') + '<br>' +
-    '<strong>Available for training:</strong> ' + (s['Available to Start Training'] || '—') + '<br>' +
-    '<strong>Available for work:</strong> ' + (s['Available to Start Work'] || '—');
-  c.appendChild(nb);
-
-  var eb = ce('button','bem');
-  eb.innerHTML = '✉ Email ' + first;
-  eb.onclick = function() {
-    window.open(
-      'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(s['Email'] || '') +
-      '&su=' + encodeURIComponent('Pedal Me training') +
-      '&body=' + encodeURIComponent('Hi ' + first + ',\n\n'),
-      '_blank'
-    );
-  };
-  c.appendChild(eb);
-
-scr.appendChild(c);
-var lsc = document.getElementById('last-session-card');
-if (lsc) {
-  lsc.addEventListener('click', function(){ openSessions(name); });
-} else {
-  console.log('last-session-card not found');
-}
-  go('s-profile');
-}
 function loadViaJsonp() {
   var list = document.getElementById('trainee-list');
   jsonp(SHEET + '?action=getAll', function(d) {
-TRAINEES = d.trainees || [];
-PROGRESS = d.progress || [];
-NEW_STARTERS = d.newStarters || [];
-renderNewStarters();
-renderList();
-renderStats();
+    TRAINEES     = d.trainees    || [];
+    PROGRESS     = d.progress    || [];
+    NEW_STARTERS = d.newStarters || [];
+    SESSIONS     = d.sessions    || [];
+    DATA_LOADED  = true;
+    renderNewStarters();
+    renderList();
+    renderStats();
   });
   setTimeout(function() {
     if (!TRAINEES.length && list) {
@@ -335,26 +205,29 @@ renderStats();
 }
 
 function getProg(name) {
-  for (var i=0;i<PROGRESS.length;i++) if (PROGRESS[i].Trainee===name) return PROGRESS[i];
+  for (var i=0; i<PROGRESS.length; i++) if (PROGRESS[i].Trainee===name) return PROGRESS[i];
   return null;
 }
 
 function getT(name) {
-  for (var i=0;i<TRAINEES.length;i++) if (TRAINEES[i].name===name) return TRAINEES[i];
+  for (var i=0; i<TRAINEES.length; i++) if (TRAINEES[i].name===name) return TRAINEES[i];
   return null;
 }
 
 function active() {
-  return TRAINEES.filter(function(t){ var s=t.status||''; return s!=='Did not complete' && s!=='Onboarded' && s!=='Completed'; });
+  return TRAINEES.filter(function(t){
+    var s = t.status || '';
+    return s !== 'Did not complete' && s !== 'Onboarded' && s !== 'Completed';
+  });
 }
 
 function doneIdx(p) {
   var l = p && p['Last Training'] ? p['Last Training'].toString().toUpperCase() : '';
-  if (l.indexOf('ASSESSMENT')>-1) return 4;
-  if (l.indexOf('NAVIGATION')>-1||l.indexOf('NAV')>-1) return 3;
-  if (l.indexOf('OR')>-1) return 2;
-  if (l.indexOf('1:1')>-1||l.indexOf('1 TO 1')>-1) return 1;
-  if (l.indexOf('INTRO')>-1) return 0;
+  if (l.indexOf('ASSESSMENT') > -1) return 4;
+  if (l.indexOf('NAVIGATION') > -1 || l.indexOf('NAV') > -1) return 3;
+  if (l.indexOf('OR') > -1) return 2;
+  if (l.indexOf('1:1') > -1 || l.indexOf('1 TO 1') > -1) return 1;
+  if (l.indexOf('INTRO') > -1) return 0;
   return -1;
 }
 
@@ -362,7 +235,7 @@ function renderStats() {
   var act = active();
   var risk = 0;
   act.forEach(function(t){ var p=getProg(t.name); if(p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1) risk++; });
-  var onb = TRAINEES.filter(function(t){ return t.status==='Onboarded' || t.status==='Completed'; }).length;
+  var onb = TRAINEES.filter(function(t){ return t.status==='Onboarded'||t.status==='Completed'; }).length;
   var scores = [];
   PROGRESS.forEach(function(p){ if(p['Avg Score']) scores.push(parseFloat(p['Avg Score'])); });
   var avg = scores.length ? (scores.reduce(function(a,b){return a+b;},0)/scores.length).toFixed(2) : '--';
@@ -374,187 +247,254 @@ function renderStats() {
 
 function setText(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
 
+function hasProgress(name) { return !!getProg(name); }
+function starterName(s) { return (s['Name'] || '').toString().trim(); }
+
+function renderNewStarters() {
+  var list = document.getElementById('new-starters-list');
+  if (!list) return;
+  var starters = NEW_STARTERS.filter(function(s){
+    var name = starterName(s);
+    return name && !hasProgress(name);
+  });
+  if (!starters.length) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No new starters waiting</div>';
+    return;
+  }
+  list.innerHTML = '';
+  starters.forEach(function(s, i) {
+    var name = starterName(s);
+    var parts = name.split(' ');
+    var ini = ((parts[0]||'').charAt(0)+(parts[1]||'').charAt(0)).toUpperCase();
+    var col = AVC[i % AVC.length];
+    var row = document.createElement('div');
+    row.className = 'trow';
+    row.innerHTML =
+      '<div class="av '+col+'">'+ini+'</div>'+
+      '<div class="ti"><div class="tn">'+name+'</div><div class="tm">'+(s['Stage']||'Applied')+'</div></div>'+
+      '<span class="bdg bgy">New Starter</span>'+
+      '<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
+    row.onclick = (function(st){ return function(){ openStarterProfile(st); }; })(s);
+    list.appendChild(row);
+  });
+}
+
 function renderList() {
   var list = document.getElementById('trainee-list');
   if (!list) return;
   var act = active();
   if (!act.length) { list.innerHTML='<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No active trainees</div>'; return; }
   list.innerHTML = '';
-  act.forEach(function(t,i) {
+  act.forEach(function(t, i) {
     var p = getProg(t.name);
     var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
     var last = p&&p['Last Training'] ? 'Last: '+p['Last Training'] : 'No sessions yet';
     var days = p&&p['Days Since'] ? ' \u00b7 '+p['Days Since']+' days ago' : '';
     var risk = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
-    var col = AVC[i%AVC.length];
+    var col = AVC[i % AVC.length];
     var row = document.createElement('div');
     row.className = 'trow';
-    row.innerHTML = '<div class="av '+col+'">'+ini+'</div>'
-      +'<div class="ti"><div class="tn">'+t.name+'</div><div class="tm">'+last+days+'</div></div>'
-      +(risk?'<span class="bdg br">\u26a0 At risk</span>':'<span class="bdg ba">'+(t.status || 'Prospect')+'</span>')      +'<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
+    row.innerHTML =
+      '<div class="av '+col+'">'+ini+'</div>'+
+      '<div class="ti"><div class="tn">'+t.name+'</div><div class="tm">'+last+days+'</div></div>'+
+      (risk?'<span class="bdg br">\u26a0 At risk</span>':'<span class="bdg ba">'+(t.status||'Prospect')+'</span>')+
+      '<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
     row.onclick = (function(n){ return function(){ openProfile(n); }; })(t.name);
     list.appendChild(row);
   });
+}
+
+function openStarterProfile(s) {
+  var name = starterName(s);
+  var first = s['First Name'] || name.split(' ')[0];
+  var surname = s['Surname'] || '';
+  var ini = ((first.charAt(0)||'')+(surname.charAt(0)||'')).toUpperCase();
+  var scr = document.getElementById('s-profile');
+  scr.innerHTML = '';
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ go('s-home'); };
+  var bt = ce('div','btitle'); bt.textContent = 'New starter';
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+  var hero = ce('div','thero');
+  var av = ce('div','av avlg av2'); av.textContent = ini;
+  var hi = ce('div');
+  var hn = ce('div','thn'); hn.textContent = name;
+  var hb = ce('span','bdg bgy'); hb.textContent = 'New Starter';
+  hi.appendChild(hn); hi.appendChild(hb);
+  hero.appendChild(av); hero.appendChild(hi); scr.appendChild(hero);
+  var c = ce('div','pad'); c.style.paddingTop = '0';
+  var nb = ce('div','nbox');
+  nb.innerHTML =
+    '<strong>Email:</strong> '+(s['Email']||'—')+'<br>'+
+    '<strong>Phone:</strong> '+(s['Phone Number']||'—')+'<br>'+
+    '<strong>Right to work:</strong> '+(s['Right to Work']||'—')+'<br>'+
+    '<strong>Available for training:</strong> '+(s['Available to Start Training']||'—')+'<br>'+
+    '<strong>Available for work:</strong> '+(s['Available to Start Work']||'—');
+  c.appendChild(nb);
+  var eb = ce('button','bem');
+  eb.innerHTML = '\u2709 Email ' + first;
+  eb.onclick = function(){
+    window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(s['Email']||'')+'&su='+encodeURIComponent('Pedal Me training')+'&body='+encodeURIComponent('Hi '+first+',\n\n'),'_blank');
+  };
+  c.appendChild(eb);
+  scr.appendChild(c);
+  go('s-profile');
 }
 
 function openProfile(name) {
   var t = getT(name), p = getProg(name);
   if (!t) return;
   var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
-  var col = AVC[Math.abs((name.charCodeAt(0)||0)+(name.charCodeAt(1)||0))%AVC.length];
-  var avg = p&&p['Avg Score']?p['Avg Score']:'\u2014';
-  var last = p&&p['Last Training']?p['Last Training']:'\u2014';
-  var ot = p&&p['On Time Score']?Math.round(p['On Time Score']*100)+'%':'\u2014';
-  var note = p&&p['Latest Note']?p['Latest Note']:'No notes yet.';
-  var risk = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
-  var di = doneIdx(p);
-  var allDone = t.status==='Completed'||t.status==='Onboarded';
+  var col = AVC[Math.abs((name.charCodeAt(0)||0)+(name.charCodeAt(1)||0)) % AVC.length];
+  var avgScore = p&&p['Avg Score'] ? p['Avg Score'] : '\u2014';
+  var last     = p&&p['Last Training'] ? p['Last Training'] : '\u2014';
+  var ot       = p&&p['On Time Score'] ? Math.round(p['On Time Score']*100)+'%' : '\u2014';
+  var note     = p&&p['Latest Note'] ? p['Latest Note'] : 'No notes yet.';
+  var risk     = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
+  var di       = doneIdx(p);
+  var allDone  = t.status==='Completed' || t.status==='Onboarded';
+
   var scr = document.getElementById('s-profile');
   scr.innerHTML = '';
 
   // header
   var h = ce('div','bhdr');
-  var bb = ce('button','bbtn'); bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>'; bb.onclick=function(){go('s-home');};
-  var bt = ce('div','btitle'); bt.textContent='Trainee profile';
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ go('s-home'); };
+  var bt = ce('div','btitle'); bt.textContent = 'Trainee profile';
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
 
   // hero
   var hero = ce('div','thero');
-  var av = ce('div','av avlg '+col); av.textContent=ini;
+  var av = ce('div','av avlg '+col); av.textContent = ini;
   var hi = ce('div');
-  var hn = ce('div','thn'); hn.textContent=name;
-  var hb = ce('span','bdg '+(allDone?'bt':risk?'br':'ba')); hb.textContent=allDone?'All sessions done':risk?'\u26a0 At risk':'In progress';
-  hi.appendChild(hn); hi.appendChild(hb); hero.appendChild(av); hero.appendChild(hi); scr.appendChild(hero);
+  var hn = ce('div','thn'); hn.textContent = name;
+  var hb = ce('span','bdg '+(allDone?'bt':risk?'br':'ba'));
+  hb.textContent = allDone ? 'All sessions done' : risk ? '\u26a0 At risk' : 'In progress';
+  hi.appendChild(hn); hi.appendChild(hb);
+  hero.appendChild(av); hero.appendChild(hi); scr.appendChild(hero);
 
   // content
-  var c = ce('div','pad'); c.style.paddingTop='0';
+  var c = ce('div','pad'); c.style.paddingTop = '0';
 
-  if (risk&&!allDone) { var al=ce('div','alrt ar'); al.textContent='\u26a0 At risk \u2014 '+(p['Days Since']||'')+' days since last session.'; c.appendChild(al); }
-  if (allDone) { var al=ce('div','alrt ag'); al.textContent='All sessions complete.'; c.appendChild(al); }
+  if (risk && !allDone) {
+    var al = ce('div','alrt ar');
+    al.textContent = '\u26a0 At risk \u2014 '+(p['Days Since']||'')+' days since last session.';
+    c.appendChild(al);
+  }
+  if (allDone) {
+    var al = ce('div','alrt ag');
+    al.textContent = 'All sessions complete.';
+    c.appendChild(al);
+  }
 
+  // stat cards
   var sg = ce('div','sgrid');
-  sg.innerHTML='<div class="scard"><div class="slbl">Avg score</div><div class="sval">'+avg+'</div></div>'
-+'<div class="scard" style="cursor:pointer" id="last-session-card"><div class="slbl">Last session ›</div><div class="sval" style="font-size:16px">'+last+'</div></div>';
-c.appendChild(sg);
+  var avgCard = ce('div','scard');
+  avgCard.innerHTML = '<div class="slbl">Avg score</div><div class="sval">'+avgScore+'</div>';
+  var lastCard = ce('div','scard tap');
+  lastCard.innerHTML = '<div class="slbl">Last session \u203a</div><div class="sval" style="font-size:16px">'+last+'</div>';
+  lastCard.onclick = (function(n){ return function(){ openSessions(n); }; })(name);
+  var otCard = ce('div','scard');
+  otCard.innerHTML = '<div class="slbl">On time</div><div class="sval">'+ot+'</div>';
+  sg.appendChild(avgCard);
+  sg.appendChild(lastCard);
+  sg.appendChild(otCard);
   c.appendChild(sg);
-document.getElementById('last-session-card').onclick = function(){ openSessions(name); };
-var nl = ce('div','secl'); nl.textContent='Latest note'; c.appendChild(nl);
-  var nl = ce('div','secl'); nl.textContent='Latest note'; c.appendChild(nl);
-  var nb = ce('div','nbox'); nb.textContent=note; c.appendChild(nb);
 
+  // latest note
+  var nl = ce('div','secl'); nl.textContent = 'Latest note'; c.appendChild(nl);
+  var nb = ce('div','nbox'); nb.textContent = note; c.appendChild(nb);
+
+  // sessions remaining
   if (!allDone) {
-    var sl = ce('div','secl'); sl.textContent='Sessions remaining'; c.appendChild(sl);
-    for (var i=di+1;i<PIPELINE.length;i++) {
-      var s=PIPELINE[i];
-      var lk = ce('a','flink'); lk.href=s.url; lk.target='_blank';
-      lk.innerHTML='<div><div class="fln">'+s.label+'</div><div class="fls">Open Google Form</div></div>'
-        +'<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>';
+    var sl = ce('div','secl'); sl.textContent = 'Sessions remaining'; c.appendChild(sl);
+    for (var i = di+1; i < PIPELINE.length; i++) {
+      var s = PIPELINE[i];
+      var lk = ce('a','flink'); lk.href = s.url; lk.target = '_blank';
+      lk.innerHTML =
+        '<div><div class="fln">'+s.label+'</div><div class="fls">Open Google Form</div></div>'+
+        '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>';
       c.appendChild(lk);
     }
   }
 
-var ol = ce('div','secl');
-ol.style.marginTop='16px';
-ol.textContent='Change status';
-c.appendChild(ol);
+  // change status
+  var ol = ce('div','secl'); ol.style.marginTop = '16px'; ol.textContent = 'Change status'; c.appendChild(ol);
+  var sd = ce('div','ifl');
+  var sel = ce('select','iel'); sel.id = 'status-select';
+  ['Prospect','Intro booked','Intro only','New starter','Active','Completed','Did not complete','Onboarded'].forEach(function(st){
+    var op = document.createElement('option');
+    op.value = st; op.textContent = st;
+    if (t.status === st) op.selected = true;
+    sel.appendChild(op);
+  });
+  sd.appendChild(sel); c.appendChild(sd);
 
-var sd = ce('div','ifl');
-var sel = ce('select','iel');
-sel.id = 'status-select';
+  var sb = ce('button','bon'); sb.textContent = 'Save status';
+  sb.onclick = function(){
+    var newStatus = document.getElementById('status-select').value;
+    writeStatus(name, newStatus);
+    t.status = newStatus;
+    openProfile(name);
+  };
+  c.appendChild(sb);
 
-[
-  'Prospect',
-  'Intro booked',
-  'Intro only',
-  'New starter',
-  'Active',
-  'Completed',
-  'Did not complete',
-  'Onboarded'
-].forEach(function(s){
-  var op = document.createElement('option');
-  op.value = s;
-  op.textContent = s;
-  if (t.status === s) op.selected = true;
-  sel.appendChild(op);
-});
-
-sd.appendChild(sel);
-c.appendChild(sd);
-
-var sb = ce('button','bon');
-sb.textContent = 'Save status';
-sb.onclick = function(){
-  var newStatus = document.getElementById('status-select').value;
-  writeStatus(name,newStatus);
-  t.status = newStatus;
-  openProfile(name);
-};
-
-c.appendChild(sb);
-
-var om = ce('div','omsg');
-om.id='omsg';
-c.appendChild(om);
-  var om = ce('div','omsg'); om.id='omsg'; c.appendChild(om);
+  var om = ce('div','omsg'); om.id = 'omsg'; c.appendChild(om);
 
   if (allDone) {
-    var ob = ce('button','bon'); ob.textContent='\uD83C\uDF89 Onboard '+t.firstName; ob.onclick=(function(n){ return function(){ openOnboard(n); }; })(name);
+    var ob = ce('button','bon');
+    ob.textContent = '\uD83C\uDF89 Onboard ' + t.firstName;
+    ob.onclick = (function(n){ return function(){ openOnboard(n); }; })(name);
     c.appendChild(ob);
   }
 
-  var eb = ce('button','bem'); eb.style.marginTop='8px';
-  eb.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email '+t.firstName;
-  eb.onclick=(function(n){ return function(){ openEmail(n); }; })(name);
+  var eb = ce('button','bem'); eb.style.marginTop = '8px';
+  eb.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Email '+t.firstName;
+  eb.onclick = (function(n){ return function(){ openEmail(n); }; })(name);
   c.appendChild(eb);
 
   scr.appendChild(c);
   go('s-profile');
 }
 
-function markComplete(name) {
-  var el=document.getElementById('omsg');
-  if(el){el.style.display='block';el.style.background='#E1F5EE';el.style.color='#085041';el.textContent='\u2713 Marked as completed';}
-  writeStatus(name,'Completed');
-}
-
-function markDNC(name) {
-  if(!confirm('Mark '+name+' as did not complete and remove from dashboard?')) return;
-  writeStatus(name,'Did not complete');
-  for(var i=0;i<TRAINEES.length;i++) if(TRAINEES[i].name===name){TRAINEES[i].status='Did not complete';break;}
-  go('s-home'); renderList(); renderStats();
-}
-
-function writeStatus(name,status) {
+function writeStatus(name, status) {
   fetch(SHEET+'?action=updateStatus&name='+encodeURIComponent(name)+'&status='+encodeURIComponent(status))
-    .then(function(r){return r.json();})
-    .then(function(d){console.log('Status:',d);})
-    .catch(function(e){console.error(e);});
+    .then(function(r){ return r.json(); })
+    .then(function(d){ console.log('Status:', d); })
+    .catch(function(e){ console.error(e); });
 }
 
 function openOnboard(name) {
-  var t=getT(name);
-  var scr=document.getElementById('s-onboard'); scr.innerHTML='';
-  var h=ce('div','bhdr');
-  var bb=ce('button','bbtn'); bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>'; bb.onclick=function(){openProfile(name);};
-  var bt=ce('div','btitle'); bt.textContent='Onboard '+name;
+  var t = getT(name);
+  var scr = document.getElementById('s-onboard'); scr.innerHTML = '';
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ openProfile(name); };
+  var bt = ce('div','btitle'); bt.textContent = 'Onboard '+name;
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
-  var c=ce('div','pad');
-  var al=ce('div','alrt ag'); al.style.marginBottom='20px'; al.textContent='Opens a welcome email in Gmail, ready to send.'; c.appendChild(al);
-  c.innerHTML+='<div class="ifl"><label class="ilbl">Onboarding day 1 \u2014 tech, mech &amp; shadowing</label><input class="iel" id="ob1" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
+  var c = ce('div','pad');
+  var al = ce('div','alrt ag'); al.style.marginBottom = '20px';
+  al.textContent = 'Opens a welcome email in Gmail, ready to send.';
+  c.appendChild(al);
+  c.innerHTML += '<div class="ifl"><label class="ilbl">Onboarding day 1 \u2014 tech, mech &amp; shadowing</label><input class="iel" id="ob1" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
     +'<div class="ifl"><label class="ilbl">Onboarding day 2 \u2014 loading, simulation &amp; jobs</label><input class="iel" id="ob2" type="text" placeholder="e.g. Tuesday 3 June 2026"></div>';
-  var btn=ce('button','bon'); btn.textContent='\u2709 Open welcome email';
-  btn.onclick=(function(n,fn){ return function(){ doOnboard(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
+  var btn = ce('button','bon'); btn.textContent = '\u2709 Open welcome email';
+  btn.onclick = (function(n,fn){ return function(){ doOnboard(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
   c.appendChild(btn); scr.appendChild(c);
   go('s-onboard');
 }
 
-function doOnboard(name,first) {
-  var d1=document.getElementById('ob1').value.trim()||'[DATE 1]';
-  var d2=document.getElementById('ob2').value.trim()||'[DATE 2]';
-  writeStatus(name,'Onboarded');
-  var subj='Welcome to Pedal Me!';
-  var body='Dear '+first+',\n\nCongratulations on passing your assessment to become a rider at Pedal Me.\n\nHere are your onboarding days:\n\n'
+function doOnboard(name, first) {
+  var d1 = document.getElementById('ob1').value.trim() || '[DATE 1]';
+  var d2 = document.getElementById('ob2').value.trim() || '[DATE 2]';
+  writeStatus(name, 'Onboarded');
+  var subj = 'Welcome to Pedal Me!';
+  var body = 'Dear '+first+',\n\nCongratulations on passing your assessment to become a rider at Pedal Me.\n\nHere are your onboarding days:\n\n'
     +d1+' \u2014 Tech, mech training and shadowing.\n\n'
     +d2+' \u2014 Loading training, simulation job, lunch jobs whilst being shadowed and solo jobs if you stay on later.\n\n'
     +'Employee Registration\nhttps://docs.google.com/forms/d/1eqUTG1XOEv294_eXA8NR1d435MYpDa2fLTGwggRUGCE/edit?ts=664b6b49\n\n'
@@ -567,24 +507,27 @@ function doOnboard(name,first) {
 }
 
 function openEmail(name) {
-  var t=getT(name), p=getProg(name);
-  var di2=doneIdx(p);
-  var scr=document.getElementById('s-email'); scr.innerHTML='';
-  var h=ce('div','bhdr');
-  var bb=ce('button','bbtn'); bb.innerHTML='<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>'; bb.onclick=function(){openProfile(name);};
-  var bt=ce('div','btitle'); bt.textContent='Email '+name;
+  var t = getT(name), p = getProg(name);
+  var di2 = doneIdx(p);
+  var scr = document.getElementById('s-email'); scr.innerHTML = '';
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ openProfile(name); };
+  var bt = ce('div','btitle'); bt.textContent = 'Email '+name;
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
-  var c=ce('div','pad');
-
-  // Session select
-  var sd=ce('div','ifl');
-  var sl=ce('label','ilbl'); sl.textContent='Session';
-  var ss=ce('select','iel'); ss.id='e-sess';
-  var start=di2+1; if(start>=PIPELINE.length) start=0;
-  for(var i=start;i<PIPELINE.length;i++){var op=document.createElement('option');op.value=PIPELINE[i].key;op.textContent=PIPELINE[i].label;ss.appendChild(op);}
+  var c = ce('div','pad');
+  var sd = ce('div','ifl');
+  var sl = ce('label','ilbl'); sl.textContent = 'Session';
+  var ss = ce('select','iel'); ss.id = 'e-sess';
+  var start = di2+1; if (start >= PIPELINE.length) start = 0;
+  for (var i=start; i<PIPELINE.length; i++) {
+    var op = document.createElement('option');
+    op.value = PIPELINE[i].key; op.textContent = PIPELINE[i].label;
+    ss.appendChild(op);
+  }
   sd.appendChild(sl); sd.appendChild(ss); c.appendChild(sd);
-
-  c.innerHTML+='<div class="ifl"><label class="ilbl">Date</label><input class="iel" id="e-date" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
+  c.innerHTML += '<div class="ifl"><label class="ilbl">Date</label><input class="iel" id="e-date" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
     +'<div class="ifl"><label class="ilbl">Time</label><input class="iel" id="e-time" type="text" placeholder="e.g. 9:00am"></div>'
     +'<div class="ifl"><label class="ilbl">Location</label>'
     +'<select class="iel" id="e-loc">'
@@ -592,25 +535,25 @@ function openEmail(name) {
     +'<option value="Newington Gardens, Harper Rd, London SE1 6PP\nMap: https://maps.app.goo.gl/ghWSsXdy3LXYMyDg9">Newington Gardens, Harper Rd</option>'
     +'<option value="[LOCATION - please add details]">Other (complete in email)</option>'
     +'</select></div>';
-
-  var btn=ce('button','bpr'); btn.textContent='\u2709 Open email';
-  btn.onclick=(function(n,fn){ return function(){ doEmail(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
+  var btn = ce('button','bpr'); btn.textContent = '\u2709 Open email';
+  btn.onclick = (function(n,fn){ return function(){ doEmail(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
   c.appendChild(btn); scr.appendChild(c);
   go('s-email');
 }
 
-function doEmail(name,first) {
-  var sk=document.getElementById('e-sess').value;
-  var date=document.getElementById('e-date').value.trim()||'[DATE]';
-  var time=document.getElementById('e-time').value.trim()||'[TIME]';
-  var loc=document.getElementById('e-loc').value;
-  var s=SINFO[sk];
-  var subj='Pedal Me training \u2014 '+s.name;
-  var body='Hi '+first+',\n\nHere are the details for your '+s.name+' session.\n\n'
+function doEmail(name, first) {
+  var sk   = document.getElementById('e-sess').value;
+  var date = document.getElementById('e-date').value.trim() || '[DATE]';
+  var time = document.getElementById('e-time').value.trim() || '[TIME]';
+  var loc  = document.getElementById('e-loc').value;
+  var s    = SINFO[sk];
+  var subj = 'Pedal Me training \u2014 '+s.name;
+  var body = 'Hi '+first+',\n\nHere are the details for your '+s.name+' session.\n\n'
     +'Date: '+date+'\nTime: '+time+'\nLocation: '+loc+'\n\n'
     +s.prep+(s.dur?' '+s.dur:'')+'\n\nPlease let us know if you have any questions.\n\nThanks,\n'+TRAINER;
   window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body),'_blank');
 }
+
 function openSessions(name) {
   var scr = document.getElementById('s-sessions');
   scr.innerHTML = '';
@@ -619,16 +562,15 @@ function openSessions(name) {
   var bb = ce('button','bbtn');
   bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
   bb.onclick = function(){ openProfile(name); };
-  var bt = ce('div','btitle'); bt.textContent = 'Sessions — ' + name;
+  var bt = ce('div','btitle'); bt.textContent = 'Sessions \u2014 ' + name;
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
 
   var c = ce('div','pad');
 
   var traineeSessions = SESSIONS.filter(function(s) {
-    return String(s['Trainee'] || '').trim().toLowerCase() === name.toLowerCase();
+    return String(s['Trainee'] || '').trim().toLowerCase() === name.trim().toLowerCase();
   });
-console.log('Looking for:', name);
-console.log('Session trainees:', SESSIONS.map(function(s){ return s['Trainee']; }));
+
   traineeSessions.sort(function(a, b) {
     return new Date(b['Date']) - new Date(a['Date']);
   });
@@ -640,21 +582,17 @@ console.log('Session trainees:', SESSIONS.map(function(s){ return s['Trainee']; 
     c.appendChild(empty);
   } else {
     var list = ce('div','tlist');
-    traineeSessions.forEach(function(s, i) {
+    traineeSessions.forEach(function(s) {
       var row = ce('div','trow');
-      row.style.cursor = 'pointer';
-
-      var date = s['Date'] ? Utilities_formatDate(s['Date']) : '—';
-      var rating = s['Overall Rating'] || '—';
-
+      var date   = s['Date'] ? fmtDate(s['Date']) : '—';
+      var rating = s['Overall Rating'];
       row.innerHTML =
-        '<div class="ti">' +
-          '<div class="tn">' + (s['Source'] || '—') + '</div>' +
-          '<div class="tm">' + date + '</div>' +
-        '</div>' +
-        '<span class="bdg bgy">' + (rating !== '—' ? rating + ' / 5' : '—') + '</span>' +
+        '<div class="ti">'+
+          '<div class="tn">'+(s['Source']||'—')+'</div>'+
+          '<div class="tm">'+date+'</div>'+
+        '</div>'+
+        '<span class="bdg bgy">'+(rating ? rating+'/5' : '—')+'</span>'+
         '<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
-
       row.onclick = (function(sess){ return function(){ openSessionDetail(name, sess); }; })(s);
       list.appendChild(row);
     });
@@ -663,16 +601,6 @@ console.log('Session trainees:', SESSIONS.map(function(s){ return s['Trainee']; 
 
   scr.appendChild(c);
   go('s-sessions');
-}
-
-function Utilities_formatDate(val) {
-  if (!val) return '—';
-  var d = new Date(val);
-  if (isNaN(d.getTime())) return String(val);
-  var day   = ('0' + d.getDate()).slice(-2);
-  var month = ('0' + (d.getMonth()+1)).slice(-2);
-  var year  = d.getFullYear();
-  return day + '/' + month + '/' + year;
 }
 
 function openSessionDetail(name, s) {
@@ -688,15 +616,14 @@ function openSessionDetail(name, s) {
 
   var c = ce('div','pad');
 
-  // Date + score
   var sg = ce('div','sgrid');
-  sg.innerHTML =
-    '<div class="scard"><div class="slbl">Date</div><div class="sval" style="font-size:16px">' + Utilities_formatDate(s['Date']) + '</div></div>' +
-    '<div class="scard"><div class="slbl">Score</div><div class="sval">' + (s['Overall Rating'] ? s['Overall Rating'] + '/5' : '—') + '</div></div>';
+  var dateCard = ce('div','scard');
+  dateCard.innerHTML = '<div class="slbl">Date</div><div class="sval" style="font-size:16px">'+fmtDate(s['Date'])+'</div>';
+  var scoreCard = ce('div','scard');
+  scoreCard.innerHTML = '<div class="slbl">Score</div><div class="sval">'+(s['Overall Rating'] ? s['Overall Rating']+'/5' : '—')+'</div>';
+  sg.appendChild(dateCard); sg.appendChild(scoreCard);
   c.appendChild(sg);
-c.appendChild(sg);
-document.getElementById('last-session-card').onclick = function(){ openSessions(name); };
-  // Notes
+
   var noteFields = ['Notes','Observation','Communication','Positioning','Priority',
                     'Anticipation','Progress','Control','Demeanour',
                     'Stops','Starts','Slow Riding','Full Lock','Emergency',
@@ -711,7 +638,7 @@ document.getElementById('last-session-card').onclick = function(){ openSessions(
         hasNotes = true;
       }
       var nb = ce('div','nbox');
-      nb.innerHTML = '<strong>' + field + ':</strong> ' + String(val).trim();
+      nb.innerHTML = '<strong>'+field+':</strong> '+String(val).trim();
       c.appendChild(nb);
     }
   });
@@ -724,7 +651,20 @@ document.getElementById('last-session-card').onclick = function(){ openSessions(
   scr.appendChild(c);
   go('s-session-detail');
 }
-function ce(tag,cls) { var e=document.createElement(tag); if(cls) e.className=cls; return e; }
+
+function fmtDate(val) {
+  if (!val) return '—';
+  var d = new Date(val);
+  if (isNaN(d.getTime())) return String(val);
+  return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();
+}
+
+function ce(tag, cls) {
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  return e;
+}
+
 loadData();
 </script>
 </body>
