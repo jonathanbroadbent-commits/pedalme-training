@@ -611,12 +611,8 @@ function openSessionDetail(name, s) {
   sg.appendChild(dateCard); sg.appendChild(scoreCard);
   c.appendChild(sg);
 var noteFields = s['Source'] === 'On Road Assessment'
-    ? ['Notes','Observation','Communication','Positioning','Anticipation','Progress','Control','Demeanour']
-    : ['Notes','Observation','Communication','Positioning','Priority',
-       'Anticipation','Progress','Control','Demeanour',
-       'Stops','Starts','Slow Riding','Full Lock','Emergency',
-       'Manual Handling','Look Back & Signal','Slalom & U Turns'];
-
+    ? ['Notes']
+    : ['Observation','Communication','Positioning','Anticipation','Progress','Control','Demeanour'];
   var hasNotes = false;
   noteFields.forEach(function(field) {
     var val = s[field];
