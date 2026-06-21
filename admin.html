@@ -83,7 +83,8 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 </div>
 
 <!-- HOME -->
-<div class="hdr">
+<div id="s-home" class="screen">
+  <div class="hdr">
     <div class="logo"><svg viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17l4-10h6l4 10"/><path d="M9 7l2-4h4"/></svg></div>
     <div style="flex:1"><div style="font-size:17px;font-weight:600">Pedal Me</div><div style="font-size:13px;color:var(--g400)">Training dashboard</div></div>
     <button id="refresh-btn" style="width:34px;height:34px;border-radius:50%;border:1px solid var(--g200);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
@@ -147,6 +148,12 @@ document.getElementById('continue-btn').onclick = function() {
   if (!DATA_LOADED) loadData();
 };
 
+document.getElementById('refresh-btn').onclick = function() {
+  DATA_LOADED = false;
+  TRAINEES = []; PROGRESS = []; NEW_STARTERS = []; SESSIONS = [];
+  loadData();
+};
+
 function go(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
   var el = document.getElementById(id);
@@ -172,11 +179,11 @@ function loadData() {
   fetch(SHEET + '?action=getAll')
     .then(function(r){ return r.json(); })
     .then(function(d){
-      TRAINEES    = d.trainees    || [];
-      PROGRESS    = d.progress    || [];
-      NEW_STARTERS = d.newStarters || [];
-      SESSIONS    = d.sessions    || [];
-      DATA_LOADED = true;
+      TRAINEES     = d.trainees     || [];
+      PROGRESS     = d.progress     || [];
+      NEW_STARTERS = d.newStarters  || [];
+      SESSIONS     = d.sessions     || [];
+      DATA_LOADED  = true;
       renderNewStarters();
       renderList();
       renderStats();
@@ -190,10 +197,10 @@ function loadData() {
 function loadViaJsonp() {
   var list = document.getElementById('trainee-list');
   jsonp(SHEET + '?action=getAll', function(d) {
-    TRAINEES     = d.trainees    || [];
-    PROGRESS     = d.progress    || [];
-    NEW_STARTERS = d.newStarters || [];
-    SESSIONS     = d.sessions    || [];
+    TRAINEES     = d.trainees     || [];
+    PROGRESS     = d.progress     || [];
+    NEW_STARTERS = d.newStarters  || [];
+    SESSIONS     = d.sessions     || [];
     DATA_LOADED  = true;
     renderNewStarters();
     renderList();
@@ -248,7 +255,6 @@ function renderStats() {
 }
 
 function setText(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
-
 function hasProgress(name) { return !!getProg(name); }
 function starterName(s) { return (s['Name'] || '').toString().trim(); }
 
@@ -348,7 +354,6 @@ function openStarterProfile(s) {
 }
 
 function openProfile(name) {
-  console.log('openProfile called:', name);
   var t = getT(name), p = getProg(name);
   if (!t) return;
   var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
@@ -364,7 +369,6 @@ function openProfile(name) {
   var scr = document.getElementById('s-profile');
   scr.innerHTML = '';
 
-  // header
   var h = ce('div','bhdr');
   var bb = ce('button','bbtn');
   bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
@@ -372,7 +376,6 @@ function openProfile(name) {
   var bt = ce('div','btitle'); bt.textContent = 'Trainee profile';
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
 
-  // hero
   var hero = ce('div','thero');
   var av = ce('div','av avlg '+col); av.textContent = ini;
   var hi = ce('div');
@@ -382,7 +385,6 @@ function openProfile(name) {
   hi.appendChild(hn); hi.appendChild(hb);
   hero.appendChild(av); hero.appendChild(hi); scr.appendChild(hero);
 
-  // content
   var c = ce('div','pad'); c.style.paddingTop = '0';
 
   if (risk && !allDone) {
@@ -396,7 +398,6 @@ function openProfile(name) {
     c.appendChild(al);
   }
 
-  // stat cards
   var sg = ce('div','sgrid');
   var avgCard = ce('div','scard');
   avgCard.innerHTML = '<div class="slbl">Avg score</div><div class="sval">'+avgScore+'</div>';
@@ -410,11 +411,9 @@ function openProfile(name) {
   sg.appendChild(otCard);
   c.appendChild(sg);
 
-// latest note
   var nl = ce('div','secl'); nl.textContent = 'Latest note'; c.appendChild(nl);
   var nb = ce('div','nbox'); nb.textContent = note; c.appendChild(nb);
 
-  // change status
   var ol = ce('div','secl'); ol.style.marginTop = '16px'; ol.textContent = 'Change status'; c.appendChild(ol);
   var sd = ce('div','ifl');
   var sel = ce('select','iel'); sel.id = 'status-select';
@@ -433,7 +432,7 @@ function openProfile(name) {
     t.status = newStatus;
     openProfile(name);
   };
-c.appendChild(sb);
+  c.appendChild(sb);
 
   var ab = ce('button','bon'); ab.textContent = '+ Add a session';
   ab.style.marginTop = '8px';
@@ -457,6 +456,7 @@ c.appendChild(sb);
   scr.appendChild(c);
   go('s-profile');
 }
+
 function writeStatus(name, status) {
   fetch(SHEET+'?action=updateStatus&name='+encodeURIComponent(name)+'&status='+encodeURIComponent(status))
     .then(function(r){ return r.json(); })
@@ -553,24 +553,19 @@ function doEmail(name, first) {
 function openSessions(name) {
   var scr = document.getElementById('s-sessions');
   scr.innerHTML = '';
-
   var h = ce('div','bhdr');
   var bb = ce('button','bbtn');
   bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
   bb.onclick = function(){ openProfile(name); };
   var bt = ce('div','btitle'); bt.textContent = 'Sessions \u2014 ' + name;
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
-
   var c = ce('div','pad');
-
   var traineeSessions = SESSIONS.filter(function(s) {
     return String(s['Trainee'] || '').trim().toLowerCase() === name.trim().toLowerCase();
   });
-
   traineeSessions.sort(function(a, b) {
     return new Date(b['Date']) - new Date(a['Date']);
   });
-
   if (!traineeSessions.length) {
     var empty = ce('div');
     empty.style.cssText = 'padding:20px;text-align:center;color:var(--g400);font-size:14px';
@@ -594,7 +589,6 @@ function openSessions(name) {
     });
     c.appendChild(list);
   }
-
   scr.appendChild(c);
   go('s-sessions');
 }
@@ -602,16 +596,13 @@ function openSessions(name) {
 function openSessionDetail(name, s) {
   var scr = document.getElementById('s-session-detail');
   scr.innerHTML = '';
-
   var h = ce('div','bhdr');
   var bb = ce('button','bbtn');
   bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
   bb.onclick = function(){ openSessions(name); };
   var bt = ce('div','btitle'); bt.textContent = s['Source'] || 'Session';
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
-
   var c = ce('div','pad');
-
   var sg = ce('div','sgrid');
   var dateCard = ce('div','scard');
   dateCard.innerHTML = '<div class="slbl">Date</div><div class="sval" style="font-size:16px">'+fmtDate(s['Date'])+'</div>';
@@ -619,12 +610,10 @@ function openSessionDetail(name, s) {
   scoreCard.innerHTML = '<div class="slbl">Score</div><div class="sval">'+(s['Overall Rating'] ? s['Overall Rating']+'/5' : '—')+'</div>';
   sg.appendChild(dateCard); sg.appendChild(scoreCard);
   c.appendChild(sg);
-
   var noteFields = ['Notes','Observation','Communication','Positioning','Priority',
                     'Anticipation','Progress','Control','Demeanour',
                     'Stops','Starts','Slow Riding','Full Lock','Emergency',
-                    'Manual Handling','Walking Turn','Look Back & Signal','Slalom & U Turns'];
-
+                    'Manual Handling','Walking Back & Signal','Slalom & U Turns'];
   var hasNotes = false;
   noteFields.forEach(function(field) {
     var val = s[field];
@@ -638,14 +627,33 @@ function openSessionDetail(name, s) {
       c.appendChild(nb);
     }
   });
-
   if (!hasNotes) {
     var nl = ce('div','secl'); nl.textContent = 'Notes'; c.appendChild(nl);
     var nb = ce('div','nbox'); nb.textContent = 'No notes recorded.'; c.appendChild(nb);
   }
-
   scr.appendChild(c);
   go('s-session-detail');
+}
+
+function openAddSession(name) {
+  var scr = document.getElementById('s-sessions');
+  scr.innerHTML = '';
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ openProfile(name); };
+  var bt = ce('div','btitle'); bt.textContent = 'Add a session';
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+  var c = ce('div','pad');
+  PIPELINE.forEach(function(s) {
+    var lk = ce('a','flink'); lk.href = s.url; lk.target = '_blank';
+    lk.innerHTML =
+      '<div><div class="fln">'+s.label+'</div><div class="fls">Open Google Form</div></div>'+
+      '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>';
+    c.appendChild(lk);
+  });
+  scr.appendChild(c);
+  go('s-sessions');
 }
 
 function fmtDate(val) {
@@ -654,36 +662,12 @@ function fmtDate(val) {
   if (isNaN(d.getTime())) return String(val);
   return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();
 }
-function openAddSession(name) {
-  var scr = document.getElementById('s-sessions');
-  scr.innerHTML = '';
 
-  var h = ce('div','bhdr');
-  var bb = ce('button','bbtn');
-  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
-  bb.onclick = function(){ openProfile(name); };
-  var bt = ce('div','btitle'); bt.textContent = 'Add a session';
-  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
-
-  var c = ce('div','pad');
-
-  PIPELINE.forEach(function(s) {
-    var lk = ce('a','flink'); lk.href = s.url; lk.target = '_blank';
-    lk.innerHTML =
-      '<div><div class="fln">'+s.label+'</div><div class="fls">Open Google Form</div></div>'+
-      '<svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>';
-    c.appendChild(lk);
-  });
-
-  scr.appendChild(c);
-  go('s-sessions');
-}
 function ce(tag, cls) {
   var e = document.createElement(tag);
   if (cls) e.className = cls;
   return e;
 }
-loadData();
 </script>
 </body>
 </html>
