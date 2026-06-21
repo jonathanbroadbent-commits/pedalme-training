@@ -346,6 +346,7 @@ function openStarterProfile(s) {
 }
 
 function openProfile(name) {
+  console.log('openProfile called:', name);
   var t = getT(name), p = getProg(name);
   if (!t) return;
   var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
