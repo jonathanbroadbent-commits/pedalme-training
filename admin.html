@@ -614,9 +614,16 @@ var noteFields = s['Source'] === 'On Road Assessment'
     ? ['Minor Errors','Major Errors','Serious Errors','Points of Advice','Times sat before',
        'Types Minor','Types Major','Types Serious','Types Advice','Demeanour',
        'Additional Comments','Outcome']
-    : ['Observation','Communication','Positioning','Anticipation','Progress','Control','Demeanour',
-       'Stops','Starts','Slow Riding','Full Lock','Emergency',
-       'Manual Handling','Look Back & Signal','Slalom & U Turns'];
+    : s['Source'] === 'Assessment Notes'
+    ? ['Anticipation','Communication','Control','Demeanour','Observation','Positioning','Progress',
+       'Anticipation notes','Communication notes','Control notes','Demeanour notes',
+       'Observation notes','Positioning notes','Progress notes','Advice','Major or Serious notes']
+    : s['Source'] === 'OR 1 & 2'
+    ? ['Notes','Stops','Starts','Slow Riding','Full Lock','Emergency','Manual Handling',
+       'Walking Turn','Look Back & Signal','Slalom & U Turns']
+    : s['Source'] === '1 to 1'
+    ? ['Notes','Observation','Communication','Positioning','Priority','Demeanour']
+    : ['Notes'];
   var hasNotes = false;
   noteFields.forEach(function(field) {
     var val = s[field];
