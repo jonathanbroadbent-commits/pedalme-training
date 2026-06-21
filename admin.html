@@ -358,7 +358,7 @@ function openProfile(name) {
   if (!t) return;
   var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
   var col = AVC[Math.abs((name.charCodeAt(0)||0)+(name.charCodeAt(1)||0)) % AVC.length];
-  var avgScore = p&&p['Avg Score'] ? p['Avg Score'] : '\u2014';
+  var avgScore = p&&p['Avg Score'] ? (parseFloat(p['Avg Score']) * 5).toFixed(1) : '\u2014';
   var last     = p&&p['Last Training'] ? p['Last Training'] : '\u2014';
   var ot       = p&&p['On Time Score'] ? Math.round(p['On Time Score']*100)+'%' : '\u2014';
   var note     = p&&p['Latest Note'] ? p['Latest Note'] : 'No notes yet.';
