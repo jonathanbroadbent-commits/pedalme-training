@@ -616,6 +616,9 @@ var noteFields = s['Source'] === 'On Road Assessment'
        'Anticipation','Progress','Control','Demeanour',
        'Stops','Starts','Slow Riding','Full Lock','Emergency',
        'Manual Handling','Look Back & Signal','Slalom & U Turns'];
+
+  var hasNotes = false;
+  noteFields.forEach(function(field) {
     var val = s[field];
     if (val && String(val).trim()) {
       if (!hasNotes) {
