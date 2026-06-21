@@ -247,7 +247,7 @@ function renderStats() {
   var onb = TRAINEES.filter(function(t){ return t.status==='Onboarded'||t.status==='Completed'; }).length;
   var scores = [];
   PROGRESS.forEach(function(p){ if(p['Avg Score']) scores.push(parseFloat(p['Avg Score'])); });
-  var avg = scores.length ? (scores.reduce(function(a,b){return a+b;},0)/scores.length).toFixed(2) : '--';
+  var avg = scores.length ? ((scores.reduce(function(a,b){return a+b;},0)/scores.length)*5).toFixed(1) : '--';
   setText('stat-active', act.length);
   setText('stat-avg', avg);
   setText('stat-risk', risk);
