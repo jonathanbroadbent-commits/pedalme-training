@@ -253,6 +253,7 @@ function hasProgress(name) { return !!getProg(name); }
 function starterName(s) { return (s['Name'] || '').toString().trim(); }
 
 function renderNewStarters() {
+  if (!TRAINER) return;
   var list = document.getElementById('new-starters-list');
   if (!list) return;
   var starters = NEW_STARTERS.filter(function(s){
