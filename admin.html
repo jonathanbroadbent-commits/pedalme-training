@@ -282,6 +282,7 @@ function renderNewStarters() {
 }
 
 function renderList() {
+  if (!TRAINER) return;
   var list = document.getElementById('trainee-list');
   if (!list) return;
   var act = active();
