@@ -184,9 +184,7 @@ function loadData() {
       NEW_STARTERS = d.newStarters  || [];
       SESSIONS     = d.sessions     || [];
       DATA_LOADED  = true;
-      renderNewStarters();
-      renderList();
-      renderStats();
+      renderDashboard();
     })
     .catch(function(e){
       console.log('fetch failed, trying JSONP...', e);
@@ -202,9 +200,7 @@ function loadViaJsonp() {
     NEW_STARTERS = d.newStarters  || [];
     SESSIONS     = d.sessions     || [];
     DATA_LOADED  = true;
-    renderNewStarters();
-    renderList();
-    renderStats();
+    renderDashboard();
   });
   setTimeout(function() {
     if (!TRAINEES.length && list) {
@@ -223,10 +219,27 @@ function getT(name) {
   return null;
 }
 
+function isFinalStatus(status) {
+  return status === 'Did not complete' || status === 'Onboarded' || status === 'Completed';
+}
+
+function normName(name) {
+  return String(name || '').trim().toLowerCase();
+}
+
+function hasSession(name) {
+  var key = normName(name);
+  if (!key) return false;
+  for (var i=0; i<SESSIONS.length; i++) {
+    if (normName(SESSIONS[i]['Trainee']) === key) return true;
+  }
+  var p = getProg(name);
+  return !!(p && (p['Last Training'] || doneIdx(p) > -1));
+}
+
 function active() {
   return TRAINEES.filter(function(t){
-    var s = t.status || '';
-    return s !== 'Did not complete' && s !== 'Onboarded' && s !== 'Completed';
+    return hasSession(t.name) && !isFinalStatus(t.status || '');
   });
 }
 
@@ -255,35 +268,77 @@ function renderStats() {
 }
 
 function setText(id, val) { var e=document.getElementById(id); if(e) e.textContent=val; }
-function hasProgress(name) { return !!getProg(name); }
+function renderDashboard() {
+  renderNewStarters();
+  renderList();
+  renderStats();
+}
+function hasProgress(name) { return hasSession(name); }
 function starterName(s) { return (s['Name'] || '').toString().trim(); }
+
+function esc(val) {
+  return String(val == null ? '' : val)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function renderNewStarters() {
   if (!TRAINER) return;
   var list = document.getElementById('new-starters-list');
   if (!list) return;
-  var starters = NEW_STARTERS.filter(function(s){
-    var name = starterName(s);
-    return name && !hasProgress(name);
+  var seen = {};
+  var starters = [];
+
+  TRAINEES.forEach(function(t) {
+    var name = t.name || '';
+    if (!name || isFinalStatus(t.status || '') || hasSession(name)) return;
+    seen[normName(name)] = true;
+    starters.push({
+      type: 'trainee',
+      name: name,
+      first: t.firstName || name.split(' ')[0],
+      surname: t.surname || '',
+      stage: t.status || 'No sessions yet',
+      data: t
+    });
   });
+
+  NEW_STARTERS.forEach(function(s){
+    var name = starterName(s);
+    var key = normName(name);
+    if (!name || seen[key] || hasSession(name)) return;
+    seen[key] = true;
+    starters.push({
+      type: 'starter',
+      name: name,
+      first: s['First Name'] || name.split(' ')[0],
+      surname: s['Surname'] || '',
+      stage: s['Stage'] || 'Applied',
+      data: s
+    });
+  });
+
   if (!starters.length) {
     list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No new starters waiting</div>';
     return;
   }
   list.innerHTML = '';
   starters.forEach(function(s, i) {
-    var name = starterName(s);
-    var parts = name.split(' ');
-    var ini = ((parts[0]||'').charAt(0)+(parts[1]||'').charAt(0)).toUpperCase();
+    var ini = ((s.first||'').charAt(0)+(s.surname||s.name.split(' ')[1]||'').charAt(0)).toUpperCase();
     var col = AVC[i % AVC.length];
     var row = document.createElement('div');
     row.className = 'trow';
     row.innerHTML =
-      '<div class="av '+col+'">'+ini+'</div>'+
-      '<div class="ti"><div class="tn">'+name+'</div><div class="tm">'+(s['Stage']||'Applied')+'</div></div>'+
+      '<div class="av '+col+'">'+esc(ini)+'</div>'+
+      '<div class="ti"><div class="tn">'+esc(s.name)+'</div><div class="tm">'+esc(s.stage)+'</div></div>'+
       '<span class="bdg bgy">New Starter</span>'+
       '<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
-    row.onclick = (function(st){ return function(){ openStarterProfile(st); }; })(s);
+    row.onclick = s.type === 'trainee'
+      ? (function(n){ return function(){ openProfile(n); }; })(s.name)
+      : (function(st){ return function(){ openStarterProfile(st); }; })(s.data);
     list.appendChild(row);
   });
 }
@@ -305,9 +360,9 @@ function renderList() {
     var row = document.createElement('div');
     row.className = 'trow';
     row.innerHTML =
-      '<div class="av '+col+'">'+ini+'</div>'+
-      '<div class="ti"><div class="tn">'+t.name+'</div><div class="tm">'+last+days+'</div></div>'+
-      (risk?'<span class="bdg br">\u26a0 At risk</span>':'<span class="bdg ba">'+(t.status||'Prospect')+'</span>')+
+      '<div class="av '+col+'">'+esc(ini)+'</div>'+
+      '<div class="ti"><div class="tn">'+esc(t.name)+'</div><div class="tm">'+esc(last+days)+'</div></div>'+
+      (risk?'<span class="bdg br">\u26a0 At risk</span>':'<span class="bdg ba">'+esc(t.status||'Prospect')+'</span>')+
       '<div class="chv"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>';
     row.onclick = (function(n){ return function(){ openProfile(n); }; })(t.name);
     list.appendChild(row);
@@ -428,9 +483,17 @@ function openProfile(name) {
   var sb = ce('button','bon'); sb.textContent = 'Save status';
   sb.onclick = function(){
     var newStatus = document.getElementById('status-select').value;
-    writeStatus(name, newStatus);
     t.status = newStatus;
-    openProfile(name);
+    renderDashboard();
+    writeStatus(name, newStatus).then(function(){
+      if (isFinalStatus(newStatus)) {
+        go('s-home');
+      } else {
+        openProfile(name);
+      }
+    }).catch(function(){
+      openProfile(name);
+    });
   };
   c.appendChild(sb);
 
@@ -458,7 +521,7 @@ function openProfile(name) {
 }
 
 function writeStatus(name, status) {
-  fetch(SHEET+'?action=updateStatus&name='+encodeURIComponent(name)+'&status='+encodeURIComponent(status))
+  return fetch(SHEET+'?action=updateStatus&name='+encodeURIComponent(name)+'&status='+encodeURIComponent(status))
     .then(function(r){ return r.json(); })
     .then(function(d){ console.log('Status:', d); })
     .catch(function(e){ console.error(e); });
