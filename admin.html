@@ -614,6 +614,7 @@ function doEmail(name, first) {
 }
 
 function openSessions(name) {
+  console.log('openSessions called with:', JSON.stringify(name));
   var scr = document.getElementById('s-sessions');
   scr.innerHTML = '';
   var h = ce('div','bhdr');
