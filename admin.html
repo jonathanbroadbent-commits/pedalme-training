@@ -627,6 +627,11 @@ function openSessions(name) {
   var traineeSessions = SESSIONS.filter(function(s) {
     return String(s['Trainee'] || '').trim().toLowerCase() === name.trim().toLowerCase();
   });
+   var traineeSessions = SESSIONS.filter(function(s) {
+    return String(s['Trainee'] || '').trim().toLowerCase() === name.trim().toLowerCase();
+  });
+  console.log('Found sessions:', traineeSessions.length);
+  traineeSessions.sort(function(a, b) {
   traineeSessions.sort(function(a, b) {
     return new Date(b['Date']) - new Date(a['Date']);
   });
