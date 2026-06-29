@@ -623,15 +623,11 @@ function openSessions(name) {
   bb.onclick = function(){ openProfile(name); };
   var bt = ce('div','btitle'); bt.textContent = 'Sessions \u2014 ' + name;
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
-  var c = ce('div','pad');
+ var c = ce('div','pad');
   var traineeSessions = SESSIONS.filter(function(s) {
     return String(s['Trainee'] || '').trim().toLowerCase() === name.trim().toLowerCase();
   });
-   var traineeSessions = SESSIONS.filter(function(s) {
-    return String(s['Trainee'] || '').trim().toLowerCase() === name.trim().toLowerCase();
-  });
   console.log('Found sessions:', traineeSessions.length);
-  traineeSessions.sort(function(a, b) {
   traineeSessions.sort(function(a, b) {
     return new Date(b['Date']) - new Date(a['Date']);
   });
