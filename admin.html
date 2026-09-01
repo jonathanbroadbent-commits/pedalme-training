@@ -61,6 +61,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--g50);color:var(--g900);mi
 .iel:focus{outline:none;border-color:var(--green)}
 select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888780' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 .omsg{display:none;border-radius:var(--rsm);padding:12px 14px;font-size:13px;font-weight:500;margin-bottom:8px;text-align:center}
+.ckrow{background:#fff;border-radius:var(--rmd);border:1px solid var(--g100);padding:14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:8px}
+.ckrow:active{background:var(--g50)}
+.ckbox{width:24px;height:24px;border-radius:7px;border:2px solid var(--g200);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:background .1s,border-color .1s}
+.ckbox svg{width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;display:none}
+.ckrow.done .ckbox{background:var(--green);border-color:var(--green)}
+.ckrow.done .ckbox svg{display:block}
+.ckrow.done .ckl{color:var(--g600);text-decoration:line-through;text-decoration-color:var(--g200)}
+.ckl{font-size:14px;font-weight:500;line-height:1.4}
+.cksub{font-size:12px;color:var(--g400);margin-top:2px}
+.ckprog{font-size:12px;color:var(--g400);margin-bottom:14px}
 </style>
 </head>
 <body>
@@ -73,9 +83,15 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
     <div style="font-size:15px;color:var(--g600);margin-bottom:32px">Who are you?</div>
     <div class="ifl">
       <select class="iel" id="trainer-sel">
+        <optgroup label="Trainers">
         <option value="Jonathan Broadbent">Jonathan Broadbent</option>
         <option value="Thato Watani">Thato Watani</option>
         <option value="David S-Szczesniak">David S-Szczesniak</option>
+        </optgroup>
+        <optgroup label="Onboarding team">
+        <option value="Mechanic">Mechanic</option>
+        <option value="Ops">Ops</option>
+        </optgroup>
       </select>
     </div>
     <button class="bpr" id="continue-btn">Continue</button>
@@ -113,6 +129,7 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 <div id="s-profile" class="screen"></div>
 <div id="s-email" class="screen"></div>
 <div id="s-onboard" class="screen"></div>
+<div id="s-checklist" class="screen"></div>
 <div id="s-sessions" class="screen"></div>
 <div id="s-session-detail" class="screen"></div>
 
@@ -123,6 +140,7 @@ var TRAINEES = [];
 var PROGRESS = [];
 var NEW_STARTERS = [];
 var SESSIONS = [];
+var ONBOARD_CHECKLIST = [];
 var DATA_LOADED = false;
 var AVC = ['av1','av2','av3','av4','av5','av6'];
 
@@ -141,6 +159,16 @@ var SINFO = {
   'nav':        {name:'Navigation & Assessment', prep:'Please be prepared for the weather and bring your own bike.',         dur:'The session will be approximately 2.5 hours.'},
   'assessment': {name:'Assessment',              prep:'Please be prepared for the weather and bring your own bike.',         dur:'The session will be approximately 2.5 hours.'}
 };
+
+var ONBOARD_ITEMS = [
+  {key:'day1',   label:'Onboarding Day 1 attended — tech, mech & shadowing'},
+  {key:'day2',   label:'Onboarding Day 2 attended — loading, simulation & jobs'},
+  {key:'empreg', label:'Employee Registration form submitted'},
+  {key:'eo',     label:'Equal Opportunities Monitoring form submitted'},
+  {key:'medq',   label:'Medical Questionnaire submitted'},
+  {key:'dbs',    label:'DBS Check cleared'},
+  {key:'deputy', label:'Deputy account set up (shift scheduling)'}
+];
 
 document.getElementById('continue-btn').onclick = function() {
   TRAINER = document.getElementById('trainer-sel').value;
@@ -183,6 +211,7 @@ function loadData() {
       PROGRESS     = d.progress     || [];
       NEW_STARTERS = d.newStarters  || [];
       SESSIONS     = d.sessions     || [];
+      ONBOARD_CHECKLIST = d.onboardingChecklist || [];
       DATA_LOADED  = true;
       renderDashboard();
     })
@@ -199,6 +228,7 @@ function loadViaJsonp() {
     PROGRESS     = d.progress     || [];
     NEW_STARTERS = d.newStarters  || [];
     SESSIONS     = d.sessions     || [];
+    ONBOARD_CHECKLIST = d.onboardingChecklist || [];
     DATA_LOADED  = true;
     renderDashboard();
   });
@@ -217,6 +247,21 @@ function getProg(name) {
 function getT(name) {
   for (var i=0; i<TRAINEES.length; i++) if (TRAINEES[i].name===name) return TRAINEES[i];
   return null;
+}
+
+function getChecklist(name) {
+  var key = normName(name);
+  for (var i=0; i<ONBOARD_CHECKLIST.length; i++) {
+    if (normName(ONBOARD_CHECKLIST[i].Trainee) === key) return ONBOARD_CHECKLIST[i];
+  }
+  return null;
+}
+
+function checklistCount(name) {
+  var row = getChecklist(name);
+  var done = 0;
+  ONBOARD_ITEMS.forEach(function(it){ if (row && row[it.key]) done++; });
+  return {done: done, total: ONBOARD_ITEMS.length, row: row};
 }
 
 function isFinalStatus(status) {
@@ -504,7 +549,13 @@ function openProfile(name) {
 
   var om = ce('div','omsg'); om.id = 'omsg'; c.appendChild(om);
 
-  if (allDone) {
+  if (t.status === 'Onboarded') {
+    var cc = checklistCount(name);
+    var cb = ce('button','bon');
+    cb.textContent = '\u2713 Onboarding checklist (' + cc.done + '/' + cc.total + ')';
+    cb.onclick = (function(n){ return function(){ openChecklist(n); }; })(name);
+    c.appendChild(cb);
+  } else if (allDone) {
     var ob = ce('button','bon');
     ob.textContent = '\uD83C\uDF89 Onboard ' + t.firstName;
     ob.onclick = (function(n){ return function(){ openOnboard(n); }; })(name);
@@ -563,6 +614,68 @@ function doOnboard(name, first) {
     +'More info on DBS: https://www.gov.uk/government/collections/dbs-checking-service-guidance--2\n\n'
     +'You should also receive an email with a link to Deputy for shift scheduling.\n\nThanks,\n'+TRAINER;
   window.open('https://mail.google.com/mail/?view=cm&fs=1&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body),'_blank');
+}
+
+function openChecklist(name) {
+  var t = getT(name);
+  var scr = document.getElementById('s-checklist'); scr.innerHTML = '';
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ openProfile(name); };
+  var bt = ce('div','btitle'); bt.textContent = 'Onboarding checklist';
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+
+  var c = ce('div','pad');
+  var hn = ce('div','thn'); hn.style.marginBottom = '4px'; hn.textContent = name;
+  c.appendChild(hn);
+  var prog = ce('div','ckprog'); prog.id = 'ck-prog'; c.appendChild(prog);
+  var list = ce('div'); list.id = 'ck-list'; c.appendChild(list);
+  scr.appendChild(c);
+  renderChecklist(name);
+  go('s-checklist');
+}
+
+function renderChecklist(name) {
+  var cc = checklistCount(name);
+  var row = cc.row;
+  setText('ck-prog', cc.done + ' of ' + cc.total + ' items complete');
+  var list = document.getElementById('ck-list');
+  if (!list) return;
+  list.innerHTML = '';
+  ONBOARD_ITEMS.forEach(function(it) {
+    var checked = !!(row && row[it.key]);
+    var r = ce('div','ckrow' + (checked ? ' done' : ''));
+    var box = ce('div','ckbox');
+    box.innerHTML = '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+    var ti = ce('div','ti');
+    var lbl = ce('div','ckl'); lbl.textContent = it.label;
+    ti.appendChild(lbl);
+    if (checked && row) {
+      var by = row[it.key + '_by']; var at = row[it.key + '_at'];
+      if (by || at) {
+        var sub = ce('div','cksub');
+        sub.textContent = (by ? by : 'Checked') + (at ? ' · ' + fmtDate(at) : '');
+        ti.appendChild(sub);
+      }
+    }
+    r.appendChild(box); r.appendChild(ti);
+    r.onclick = (function(key, next){ return function(){ toggleOnboardingItem(name, key, next); }; })(it.key, !checked);
+    list.appendChild(r);
+  });
+}
+
+function toggleOnboardingItem(name, key, checked) {
+  var row = getChecklist(name);
+  if (!row) { row = {Trainee: name}; ONBOARD_CHECKLIST.push(row); }
+  row[key] = checked;
+  row[key + '_by'] = checked ? TRAINER : '';
+  row[key + '_at'] = checked ? new Date().toISOString() : '';
+  renderChecklist(name);
+  var url = SHEET + '?action=setOnboardingItem&name=' + encodeURIComponent(name)
+    + '&item=' + encodeURIComponent(key) + '&checked=' + (checked ? 'true' : 'false')
+    + '&by=' + encodeURIComponent(TRAINER);
+  fetch(url).then(function(r){ return r.json(); }).catch(function(e){ console.error(e); });
 }
 
 function openEmail(name) {
