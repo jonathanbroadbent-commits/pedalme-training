@@ -165,13 +165,17 @@ var SINFO = {
 };
 
 var ONBOARD_ITEMS = [
-  {key:'day1',   label:'Onboarding Day 1 attended — tech, mech & shadowing'},
-  {key:'day2',   label:'Onboarding Day 2 attended — loading, simulation & jobs'},
-  {key:'empreg', label:'Employee Registration form submitted'},
-  {key:'eo',     label:'Equal Opportunities Monitoring form submitted'},
-  {key:'medq',   label:'Medical Questionnaire submitted'},
-  {key:'dbs',    label:'DBS Check cleared'},
-  {key:'deputy', label:'Deputy account set up (shift scheduling)'}
+  {key:'empreg',     phase:'Paperwork', label:'Employee Registration form submitted'},
+  {key:'eo',         phase:'Paperwork', label:'Equal Opportunities Monitoring form submitted'},
+  {key:'medq',       phase:'Paperwork', label:'Medical Questionnaire submitted'},
+  {key:'dbs',        phase:'Paperwork', label:'DBS Check cleared'},
+  {key:'deputy',     phase:'Paperwork', label:'Deputy account set up (shift scheduling)'},
+  {key:'techoffice', phase:'Day 1',     label:'Tech / office'},
+  {key:'lunch1',     phase:'Day 1',     label:'Lunch shadowing'},
+  {key:'loading',    phase:'Day 1',     label:'Loading'},
+  {key:'mech',       phase:'Day 2',     label:'Mech'},
+  {key:'lunch2',     phase:'Day 2',     label:'Lunch shadowed'},
+  {key:'finaladmin', phase:'Day 2',     label:'Final admin'}
 ];
 
 document.getElementById('continue-btn').onclick = function() {
@@ -678,7 +682,13 @@ function renderChecklist(name) {
   var list = document.getElementById('ck-list');
   if (!list) return;
   list.innerHTML = '';
+  var lastPhase = null;
   ONBOARD_ITEMS.forEach(function(it) {
+    if (it.phase !== lastPhase) {
+      lastPhase = it.phase;
+      var ph = ce('div','secl'); ph.style.marginTop = '18px'; ph.textContent = it.phase;
+      list.appendChild(ph);
+    }
     var checked = !!(row && row[it.key]);
     var r = ce('div','ckrow' + (checked ? ' done' : ''));
     var box = ce('div','ckbox');
