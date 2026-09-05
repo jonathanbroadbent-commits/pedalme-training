@@ -160,17 +160,23 @@ var SINFO = {
 };
 
 var ONBOARD_ITEMS = [
-  {key:'empreg',     phase:'Paperwork', label:'Employee Registration form submitted'},
-  {key:'eo',         phase:'Paperwork', label:'Equal Opportunities Monitoring form submitted'},
-  {key:'medq',       phase:'Paperwork', label:'Medical Questionnaire submitted'},
-  {key:'dbs',        phase:'Paperwork', label:'DBS Check cleared'},
-  {key:'deputy',     phase:'Paperwork', label:'Deputy account set up (shift scheduling)'},
-  {key:'techoffice', phase:'Day 1',     label:'Tech / office'},
-  {key:'lunch1',     phase:'Day 1',     label:'Lunch shadowing'},
-  {key:'loading',    phase:'Day 1',     label:'Loading'},
-  {key:'mech',       phase:'Day 2',     label:'Mech'},
-  {key:'lunch2',     phase:'Day 2',     label:'Lunch shadowed'},
-  {key:'finaladmin', phase:'Day 2',     label:'Final admin'}
+  {key:'phone',        label:'Phone set up'},
+  {key:'rota',         label:'Rota form'},
+  {key:'dbs',          label:'DBS'},
+  {key:'registration', label:'Registration'},
+  {key:'righttowork',  label:'Right to work'},
+  {key:'google',       label:'Google'},
+  {key:'deputy',       label:'Deputy'},
+  {key:'nda',          label:'NDA'},
+  {key:'contract',     label:'Contract'},
+  {key:'techoffice',   label:'Tech / office'},
+  {key:'lunch1',       label:'Lunch shadowing'},
+  {key:'loading',      label:'Loading'},
+  {key:'simulation',   label:'Simulation task set up'},
+  {key:'mech',         label:'Mech'},
+  {key:'pannier',      label:'Pannier'},
+  {key:'lunch2',       label:'Lunch shadowed'},
+  {key:'finaladmin',   label:'Final admin'}
 ];
 
 document.getElementById('continue-btn').onclick = function() {
@@ -708,13 +714,7 @@ function renderChecklist(name) {
   var list = document.getElementById('ck-list');
   if (!list) return;
   list.innerHTML = '';
-  var lastPhase = null;
   ONBOARD_ITEMS.forEach(function(it) {
-    if (it.phase !== lastPhase) {
-      lastPhase = it.phase;
-      var ph = ce('div','secl'); ph.style.marginTop = '18px'; ph.textContent = it.phase;
-      list.appendChild(ph);
-    }
     var checked = !!(row && row[it.key]);
     var r = ce('div','ckrow' + (checked ? ' done' : ''));
     var box = ce('div','ckbox');
@@ -748,7 +748,14 @@ function toggleOnboardingItem(name, key, checked) {
     + '&by=' + encodeURIComponent(TRAINER);
   fetch(url).then(function(r){ return r.json(); }).catch(function(e){ console.error(e); });
 }
-
+function saveOnboardingNotes(name) {
+  var val = document.getElementById('ck-notes').value;
+  var row = getChecklist(name);
+  if (!row) { row = {Trainee: name}; ONBOARD_CHECKLIST.push(row); }
+  row['Notes'] = val;
+  var url = SHEET + '?action=setOnboardingNotes&name=' + encodeURIComponent(name) + '&notes=' + encodeURIComponent(val);
+  fetch(url).then(function(r){ return r.json(); }).catch(function(e){ console.error(e); });
+}
 function openEmail(name) {
   var t = getT(name), p = getProg(name);
   var di2 = doneIdx(p);
