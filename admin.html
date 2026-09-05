@@ -82,17 +82,9 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
     <div style="font-size:22px;font-weight:600;margin-bottom:6px">Pedal Me Training</div>
     <div style="font-size:15px;color:var(--g600);margin-bottom:32px">Who are you?</div>
     <div class="ifl">
-      <select class="iel" id="trainer-sel">
-        <optgroup label="Trainers">
-        <option value="Jonathan Broadbent">Jonathan Broadbent</option>
-        <option value="Thato Watani">Thato Watani</option>
-        <option value="David S-Szczesniak">David S-Szczesniak</option>
-        </optgroup>
-        <optgroup label="Onboarding team">
-        <option value="Mechanic">Mechanic</option>
-        <option value="Ops">Ops</option>
-        </optgroup>
-      </select>
+     <select class="iel" id="trainer-sel">
+  <option value="">Loading…</option>
+</select>
     </div>
     <button class="bpr" id="continue-btn">Continue</button>
   </div>
@@ -190,7 +182,24 @@ document.getElementById('refresh-btn').onclick = function() {
   TRAINEES = []; PROGRESS = []; NEW_STARTERS = []; SESSIONS = [];
   loadData();
 };
+function loadStaff() {
+  fetch(SHEET + '?action=getStaff')
+    .then(function(r){ return r.json(); })
+    .then(function(d){ populateStaffSelect(d.staff || []); })
+    .catch(function(e){ console.error('Staff load failed', e); });
+}
 
+function populateStaffSelect(names) {
+  var sel = document.getElementById('trainer-sel');
+  sel.innerHTML = '';
+  names.forEach(function(name) {
+    var op = document.createElement('option');
+    op.value = name; op.textContent = name;
+    sel.appendChild(op);
+  });
+}
+
+loadStaff();
 function go(id) {
   document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
   var el = document.getElementById(id);
