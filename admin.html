@@ -632,7 +632,28 @@ function openOnboard(name) {
   c.appendChild(btn); scr.appendChild(c);
   go('s-onboard');
 }
+document.getElementById('data-btn').onclick = function(){ openDataScreen(); };
 
+function openDataScreen() {
+  var scr = document.getElementById('s-data'); scr.innerHTML = '';
+  var h = ce('div','bhdr');
+  var bb = ce('button','bbtn');
+  bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
+  bb.onclick = function(){ go('s-home'); };
+  var bt = ce('div','btitle'); bt.textContent = 'Data';
+  h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
+  var c = ce('div','pad');
+  var sg = ce('div','sgrid');
+  sg.innerHTML =
+    '<div class="scard"><div class="slbl">Trainees</div><div class="sval" id="stat-active">—</div><div class="ssub">active</div></div>'+
+    '<div class="scard"><div class="slbl">Avg score</div><div class="sval" id="stat-avg">—</div><div class="ssub">out of 5</div></div>'+
+    '<div class="scard"><div class="slbl">At risk</div><div class="sval" id="stat-risk" style="color:var(--red)">—</div><div class="ssub">need attention</div></div>'+
+    '<div class="scard"><div class="slbl">Onboarded</div><div class="sval" id="stat-onb" style="color:var(--green)">—</div><div class="ssub">this cohort</div></div>';
+  c.appendChild(sg);
+  scr.appendChild(c);
+  renderStats();
+  go('s-data');
+}
 function doOnboard(name, first) {
   var d1 = document.getElementById('ob1').value.trim() || '[DATE 1]';
   var d2 = document.getElementById('ob2').value.trim() || '[DATE 2]';
