@@ -257,22 +257,16 @@ function loadViaJsonp() {
   }, 8000);
 }
 
-function getProg(name) {
-  for (var i=0; i<PROGRESS.length; i++) if (PROGRESS[i].Trainee===name) return PROGRESS[i];
-  return null;
-}
+function getProg(name) { return PROG_IDX[name] || null; }
+function getT(name) { return TRAINEE_IDX[name] || null; }
+function getChecklist(name) { return CHECK_IDX[normName(name)] || null; }
 
-function getT(name) {
-  for (var i=0; i<TRAINEES.length; i++) if (TRAINEES[i].name===name) return TRAINEES[i];
-  return null;
-}
-
-function getChecklist(name) {
+function hasSession(name) {
   var key = normName(name);
-  for (var i=0; i<ONBOARD_CHECKLIST.length; i++) {
-    if (normName(ONBOARD_CHECKLIST[i].Trainee) === key) return ONBOARD_CHECKLIST[i];
-  }
-  return null;
+  if (!key) return false;
+  if (SESSION_IDX[key]) return true;
+  var p = getProg(name);
+  return !!(p && (p['Last Training'] || doneIdx(p) > -1));
 }
 
 function checklistCount(name) {
@@ -298,12 +292,6 @@ function buildIndexes() {
   TRAINEES.forEach(function(t){ if (!(t.name in TRAINEE_IDX)) TRAINEE_IDX[t.name] = t; });
   ONBOARD_CHECKLIST.forEach(function(c){ var k = normName(c.Trainee); if (!(k in CHECK_IDX)) CHECK_IDX[k] = c; });
 }
-function hasSession(name) {
-  var key = normName(name);
-  if (!key) return false;
-  for (var i=0; i<SESSIONS.length; i++) {
-    if (normName(SESSIONS[i]['Trainee']) === key) return true;
-  }
   var p = getProg(name);
   return !!(p && (p['Last Training'] || doneIdx(p) > -1));
 }
