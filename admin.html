@@ -180,7 +180,7 @@ document.getElementById('continue-btn').onclick = function() {
 document.getElementById('refresh-btn').onclick = function() {
   DATA_LOADED = false;
   TRAINEES = []; PROGRESS = []; NEW_STARTERS = []; SESSIONS = [];
-  loadData();
+  loadData(true);
 };
 function loadStaff() {
   fetch(SHEET + '?action=getStaff')
@@ -218,11 +218,11 @@ function jsonp(url, cb) {
   document.head.appendChild(script);
 }
 
-function loadData() {
+function loadData(fresh) {
   var list = document.getElementById('trainee-list');
   if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>';
 
-  fetch(SHEET + '?action=getAll')
+  fetch(SHEET + '?action=getAll' + (fresh ? '&nocache=1' : ''))
     .then(function(r){ return r.json(); })
     .then(function(d){
       TRAINEES     = d.trainees     || [];
