@@ -395,21 +395,6 @@ function renderNewStarters() {
     });
   });
 
-  NEW_STARTERS.forEach(function(s){
-    var name = starterName(s);
-    var key = normName(name);
-    if (!name || seen[key] || hasSession(name)) return;
-    seen[key] = true;
-    starters.push({
-      type: 'starter',
-      name: name,
-      first: s['First Name'] || name.split(' ')[0],
-      surname: s['Surname'] || '',
-      stage: s['Stage'] || 'Applied',
-      data: s
-    });
-  });
-
   if (!starters.length) {
     list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No new starters waiting</div>';
     return;
