@@ -363,8 +363,8 @@ function renderOnboardingList() {
   });
 }
 function hasProgress(name) { return hasSession(name); }
-function starterName(s) { return (s['Name'] || '').toString().trim(); }
-
+   function starterName(s) { return (s['Name'] || s.name || '').toString().trim(); }
+  
 function esc(val) {
   return String(val == null ? '' : val)
     .replace(/&/g, '&amp;')
