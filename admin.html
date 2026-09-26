@@ -249,6 +249,7 @@ function loadViaJsonp() {
     SESSIONS     = d.sessions     || [];
     ONBOARD_CHECKLIST = d.onboardingChecklist || [];
     DATA_LOADED  = true;
+    buildIndexes();
     renderDashboard();
   });
   setTimeout(function() {
