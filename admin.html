@@ -292,9 +292,6 @@ function buildIndexes() {
   TRAINEES.forEach(function(t){ if (!(t.name in TRAINEE_IDX)) TRAINEE_IDX[t.name] = t; });
   ONBOARD_CHECKLIST.forEach(function(c){ var k = normName(c.Trainee); if (!(k in CHECK_IDX)) CHECK_IDX[k] = c; });
 }
-  var p = getProg(name);
-  return !!(p && (p['Last Training'] || doneIdx(p) > -1));
-}
 
 function active() {
   return TRAINEES.filter(function(t){
