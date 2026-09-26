@@ -279,8 +279,7 @@ function checklistCount(name) {
 }
 
 function isFinalStatus(status) {
-  return status === 'Did not complete' || status === 'Onboarded' || status === 'Completed';
-}
+  return status === 'Did not complete' || status === 'Onboarding' || status === 'Rider';}
 
 function normName(name) {
   return String(name || '').trim().toLowerCase();
@@ -315,7 +314,7 @@ function renderStats() {
   var act = active();
   var risk = 0;
   act.forEach(function(t){ var p=getProg(t.name); if(p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1) risk++; });
-  var onb = TRAINEES.filter(function(t){ return t.status==='Onboarded'||t.status==='Completed'; }).length;
+  var onb = TRAINEES.filter(function(t){ return t.status==='Onboarding'||t.status==='Rider'; }).length;
   var scores = [];
   PROGRESS.forEach(function(p){ if(p['Avg Score']) scores.push(parseFloat(p['Avg Score'])); });
   var avg = scores.length ? ((scores.reduce(function(a,b){return a+b;},0)/scores.length)*5).toFixed(1) : '--';
@@ -338,7 +337,7 @@ function renderOnboardingList() {
   var list = document.getElementById('onboarding-list');
   if (!list) return;
   var onboarding = TRAINEES.filter(function(t){
-    if (t.status !== 'Onboarded') return false;
+    if (t.status !== 'Onboarding') return false;
     var cc = checklistCount(t.name);
     return cc.done < cc.total;
   });
@@ -493,8 +492,7 @@ function openProfile(name) {
   var note     = p&&p['Latest Note'] ? p['Latest Note'] : 'No notes yet.';
   var risk     = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
   var di       = doneIdx(p);
-  var allDone  = t.status==='Completed' || t.status==='Onboarded';
-
+  var allDone  = t.status==='Onboarding' || t.status==='Rider';
   var scr = document.getElementById('s-profile');
   scr.innerHTML = '';
 
@@ -578,7 +576,7 @@ function openProfile(name) {
 
   var om = ce('div','omsg'); om.id = 'omsg'; c.appendChild(om);
 
-  if (t.status === 'Onboarded') {
+  if (t.status === 'Onboarding') {
     var cc = checklistCount(name);
     var cb = ce('button','bon');
     cb.textContent = '\u2713 Onboarding checklist (' + cc.done + '/' + cc.total + ')';
@@ -652,8 +650,7 @@ function openDataScreen() {
 function doOnboard(name, first) {
   var d1 = document.getElementById('ob1').value.trim() || '[DATE 1]';
   var d2 = document.getElementById('ob2').value.trim() || '[DATE 2]';
-  writeStatus(name, 'Onboarded');
-  var subj = 'Welcome to Pedal Me!';
+  writeStatus(name, 'Onboarding');  var subj = 'Welcome to Pedal Me!';
   var body = 'Dear '+first+',\n\nCongratulations on passing your assessment to become a rider at Pedal Me.\n\nHere are your onboarding days:\n\n'
     +d1+' \u2014 Tech, mech training and shadowing.\n\n'
     +d2+' \u2014 Loading training, simulation job, lunch jobs whilst being shadowed and solo jobs if you stay on later.\n\n'
