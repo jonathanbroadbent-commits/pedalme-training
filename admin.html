@@ -289,7 +289,15 @@ function isFinalStatus(status) {
 function normName(name) {
   return String(name || '').trim().toLowerCase();
 }
+var SESSION_IDX = {}, PROG_IDX = {}, TRAINEE_IDX = {}, CHECK_IDX = {};
 
+function buildIndexes() {
+  SESSION_IDX = {}; PROG_IDX = {}; TRAINEE_IDX = {}; CHECK_IDX = {};
+  SESSIONS.forEach(function(s){ var k = normName(s['Trainee']); if (k) (SESSION_IDX[k] = SESSION_IDX[k] || []).push(s); });
+  PROGRESS.forEach(function(p){ if (!(p.Trainee in PROG_IDX)) PROG_IDX[p.Trainee] = p; });
+  TRAINEES.forEach(function(t){ if (!(t.name in TRAINEE_IDX)) TRAINEE_IDX[t.name] = t; });
+  ONBOARD_CHECKLIST.forEach(function(c){ var k = normName(c.Trainee); if (!(k in CHECK_IDX)) CHECK_IDX[k] = c; });
+}
 function hasSession(name) {
   var key = normName(name);
   if (!key) return false;
