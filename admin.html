@@ -337,10 +337,9 @@ function renderOnboardingList() {
   var list = document.getElementById('onboarding-list');
   if (!list) return;
   var onboarding = TRAINEES.filter(function(t){
-    if (t.status !== 'Onboarding') return false;
-    var cc = checklistCount(t.name);
-    return cc.done < cc.total;
+    return t.status === 'Onboarding';
   });
+  
   if (!onboarding.length) {
     list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No riders mid-onboarding</div>';
     return;
