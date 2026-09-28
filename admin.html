@@ -105,8 +105,8 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
     <div class="tlist" id="trainee-list">
       <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>
     </div>
-    <div class="secl" style="margin-top:24px">Onboard</div>
-    <div class="tlist" id="onboarding-list">
+    <div class="secl" style="margin-top:24px">Onboarding</div>
+    <div class="tlist" id="Onboardinging-list">
       <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>
     </div>
   </div>
@@ -115,7 +115,7 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
 <!-- DYNAMIC SCREENS -->
 <div id="s-profile" class="screen"></div>
 <div id="s-email" class="screen"></div>
-<div id="s-onboard" class="screen"></div>
+<div id="s-Onboarding" class="screen"></div>
 <div id="s-data" class="screen"></div>
 <div id="s-checklist" class="screen"></div>
 <div id="s-sessions" class="screen"></div>
@@ -128,7 +128,7 @@ var TRAINEES = [];
 var PROGRESS = [];
 var NEW_STARTERS = [];
 var SESSIONS = [];
-var ONBOARD_CHECKLIST = [];
+var Onboarding_CHECKLIST = [];
 var DATA_LOADED = false;
 var AVC = ['av1','av2','av3','av4','av5','av6'];
 
@@ -148,7 +148,7 @@ var SINFO = {
   'assessment': {name:'Assessment',              prep:'Please be prepared for the weather and bring your own bike.',         dur:'The session will be approximately 2.5 hours.'}
 };
 
-var ONBOARD_ITEMS = [
+var Onboarding_ITEMS = [
   {key:'phone',        label:'Phone set up'},
   {key:'rota',         label:'Rota form'},
   {key:'dbs',          label:'DBS'},
@@ -230,7 +230,7 @@ function loadData(fresh) {
       PROGRESS     = d.progress     || [];
       NEW_STARTERS = d.newStarters  || [];
       SESSIONS     = d.sessions     || [];
-      ONBOARD_CHECKLIST = d.onboardingChecklist || [];
+      Onboarding_CHECKLIST = d.OnboardingingChecklist || [];
       DATA_LOADED  = true;
       buildIndexes();
       renderDashboard();
@@ -248,7 +248,7 @@ function loadViaJsonp(fresh) {
     PROGRESS     = d.progress     || [];
     NEW_STARTERS = d.newStarters  || [];
     SESSIONS     = d.sessions     || [];
-    ONBOARD_CHECKLIST = d.onboardingChecklist || [];
+    Onboarding_CHECKLIST = d.OnboardingingChecklist || [];
     DATA_LOADED  = true;
     buildIndexes();
     renderDashboard();
@@ -276,12 +276,12 @@ function hasSession(name) {
 function checklistCount(name) {
   var row = getChecklist(name);
   var done = 0;
-  ONBOARD_ITEMS.forEach(function(it){ if (row && row[it.key]) done++; });
-  return {done: done, total: ONBOARD_ITEMS.length, row: row};
+  Onboarding_ITEMS.forEach(function(it){ if (row && row[it.key]) done++; });
+  return {done: done, total: Onboarding_ITEMS.length, row: row};
 }
 
 function isFinalStatus(status) {
-  return status === 'Did not complete' || status === 'Onboarding' || status === 'Rider';}
+  return status === 'Did not complete' || status === 'Onboardinging' || status === 'Rider';}
 
 function normName(name) {
   return String(name || '').trim().toLowerCase();
@@ -293,7 +293,7 @@ function buildIndexes() {
   SESSIONS.forEach(function(s){ var k = normName(s['Trainee']); if (k) (SESSION_IDX[k] = SESSION_IDX[k] || []).push(s); });
   PROGRESS.forEach(function(p){ if (!(p.Trainee in PROG_IDX)) PROG_IDX[p.Trainee] = p; });
   TRAINEES.forEach(function(t){ if (!(t.name in TRAINEE_IDX)) TRAINEE_IDX[t.name] = t; });
-  ONBOARD_CHECKLIST.forEach(function(c){ var k = normName(c.Trainee); if (!(k in CHECK_IDX)) CHECK_IDX[k] = c; });
+  Onboarding_CHECKLIST.forEach(function(c){ var k = normName(c.Trainee); if (!(k in CHECK_IDX)) CHECK_IDX[k] = c; });
 }
 
 function active() {
@@ -316,7 +316,7 @@ function renderStats() {
   var act = active();
   var risk = 0;
   act.forEach(function(t){ var p=getProg(t.name); if(p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1) risk++; });
-  var onb = TRAINEES.filter(function(t){ return t.status==='Onboarding'||t.status==='Rider'; }).length;
+  var onb = TRAINEES.filter(function(t){ return t.status==='Onboardinging'||t.status==='Rider'; }).length;
   var scores = [];
   PROGRESS.forEach(function(p){ if(p['Avg Score']) scores.push(parseFloat(p['Avg Score'])); });
   var avg = scores.length ? ((scores.reduce(function(a,b){return a+b;},0)/scores.length)*5).toFixed(1) : '--';
@@ -330,24 +330,24 @@ function setText(id, val) { var e=document.getElementById(id); if(e) e.textConte
 function renderDashboard() {
   renderNewStarters();
   renderList();
-  renderOnboardingList();
+  renderOnboardingingList();
   renderStats();
 }
 
-function renderOnboardingList() {
+function renderOnboardingingList() {
   if (!TRAINER) return;
-  var list = document.getElementById('onboarding-list');
+  var list = document.getElementById('Onboardinging-list');
   if (!list) return;
-  var onboarding = TRAINEES.filter(function(t){
-    return t.status === 'Onboarding';
+  var Onboardinging = TRAINEES.filter(function(t){
+    return t.status === 'Onboardinging';
   });
   
-  if (!onboarding.length) {
-    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No riders mid-onboarding</div>';
+  if (!Onboardinging.length) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">No riders mid-Onboardinging</div>';
     return;
   }
   list.innerHTML = '';
-  onboarding.forEach(function(t, i) {
+  Onboardinging.forEach(function(t, i) {
     var cc = checklistCount(t.name);
     var ini = (t.firstName.charAt(0)+(t.surname?t.surname.charAt(0):'')).toUpperCase();
     var col = AVC[i % AVC.length];
@@ -493,7 +493,7 @@ function openProfile(name) {
   var note     = p&&p['Latest Note'] ? p['Latest Note'] : 'No notes yet.';
   var risk     = p&&p['Risk Flag']&&p['Risk Flag'].toString().indexOf('At Risk')>-1;
   var di       = doneIdx(p);
-  var allDone  = t.status==='Onboarding' || t.status==='Rider';
+  var allDone  = t.status==='Onboardinging' || t.status==='Rider';
   var scr = document.getElementById('s-profile');
   scr.innerHTML = '';
 
@@ -545,7 +545,7 @@ function openProfile(name) {
   var ol = ce('div','secl'); ol.style.marginTop = '16px'; ol.textContent = 'Change status'; c.appendChild(ol);
   var sd = ce('div','ifl');
   var sel = ce('select','iel'); sel.id = 'status-select';
-  ['In training','Onboarding','Rider','Did not complete'].forEach(function(st){
+  ['In training','Onboardinging','Rider','Did not complete'].forEach(function(st){
     var op = document.createElement('option');
     op.value = st; op.textContent = st;
     if (t.status === st) op.selected = true;
@@ -577,16 +577,16 @@ function openProfile(name) {
 
   var om = ce('div','omsg'); om.id = 'omsg'; c.appendChild(om);
 
-  if (t.status === 'Onboarding') {
+  if (t.status === 'Onboardinging') {
     var cc = checklistCount(name);
     var cb = ce('button','bon');
-    cb.textContent = '\u2713 Onboarding checklist (' + cc.done + '/' + cc.total + ')';
+    cb.textContent = '\u2713 Onboardinging checklist (' + cc.done + '/' + cc.total + ')';
     cb.onclick = (function(n){ return function(){ openChecklist(n); }; })(name);
     c.appendChild(cb);
   } else if (allDone) {
     var ob = ce('button','bon');
-    ob.textContent = '\uD83C\uDF89 Onboard ' + t.firstName;
-    ob.onclick = (function(n){ return function(){ openOnboard(n); }; })(name);
+    ob.textContent = '\uD83C\uDF89 Onboarding ' + t.firstName;
+    ob.onclick = (function(n){ return function(){ openOnboarding(n); }; })(name);
     c.appendChild(ob);
   }
 
@@ -606,25 +606,25 @@ function writeStatus(name, status) {
     .catch(function(e){ console.error(e); });
 }
 
-function openOnboard(name) {
+function openOnboarding(name) {
   var t = getT(name);
-  var scr = document.getElementById('s-onboard'); scr.innerHTML = '';
+  var scr = document.getElementById('s-Onboarding'); scr.innerHTML = '';
   var h = ce('div','bhdr');
   var bb = ce('button','bbtn');
   bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
   bb.onclick = function(){ openProfile(name); };
-  var bt = ce('div','btitle'); bt.textContent = 'Onboard '+name;
+  var bt = ce('div','btitle'); bt.textContent = 'Onboarding '+name;
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
   var c = ce('div','pad');
   var al = ce('div','alrt ag'); al.style.marginBottom = '20px';
   al.textContent = 'Opens a welcome email in Gmail, ready to send.';
   c.appendChild(al);
-  c.innerHTML += '<div class="ifl"><label class="ilbl">Onboarding day 1 \u2014 tech, mech &amp; shadowing</label><input class="iel" id="ob1" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
-    +'<div class="ifl"><label class="ilbl">Onboarding day 2 \u2014 loading, simulation &amp; jobs</label><input class="iel" id="ob2" type="text" placeholder="e.g. Tuesday 3 June 2026"></div>';
+  c.innerHTML += '<div class="ifl"><label class="ilbl">Onboardinging day 1 \u2014 tech, mech &amp; shadowing</label><input class="iel" id="ob1" type="text" placeholder="e.g. Monday 2 June 2026"></div>'
+    +'<div class="ifl"><label class="ilbl">Onboardinging day 2 \u2014 loading, simulation &amp; jobs</label><input class="iel" id="ob2" type="text" placeholder="e.g. Tuesday 3 June 2026"></div>';
   var btn = ce('button','bon'); btn.textContent = '\u2709 Open welcome email';
-  btn.onclick = (function(n,fn){ return function(){ doOnboard(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
+  btn.onclick = (function(n,fn){ return function(){ doOnboarding(n,fn); }; })(name, t?t.firstName:name.split(' ')[0]);
   c.appendChild(btn); scr.appendChild(c);
-  go('s-onboard');
+  go('s-Onboarding');
 }
 document.getElementById('data-btn').onclick = function(){ openDataScreen(); };
 
@@ -642,17 +642,17 @@ function openDataScreen() {
     '<div class="scard"><div class="slbl">Trainees</div><div class="sval" id="stat-active">—</div><div class="ssub">active</div></div>'+
     '<div class="scard"><div class="slbl">Avg score</div><div class="sval" id="stat-avg">—</div><div class="ssub">out of 5</div></div>'+
     '<div class="scard"><div class="slbl">At risk</div><div class="sval" id="stat-risk" style="color:var(--red)">—</div><div class="ssub">need attention</div></div>'+
-    '<div class="scard"><div class="slbl">Onboarded</div><div class="sval" id="stat-onb" style="color:var(--green)">—</div><div class="ssub">this cohort</div></div>';
+    '<div class="scard"><div class="slbl">Onboardinged</div><div class="sval" id="stat-onb" style="color:var(--green)">—</div><div class="ssub">this cohort</div></div>';
   c.appendChild(sg);
   scr.appendChild(c);
   renderStats();
   go('s-data');
 }
-function doOnboard(name, first) {
+function doOnboarding(name, first) {
   var d1 = document.getElementById('ob1').value.trim() || '[DATE 1]';
   var d2 = document.getElementById('ob2').value.trim() || '[DATE 2]';
-  writeStatus(name, 'Onboarding');  var subj = 'Welcome to Pedal Me!';
-  var body = 'Dear '+first+',\n\nCongratulations on passing your assessment to become a rider at Pedal Me.\n\nHere are your onboarding days:\n\n'
+  writeStatus(name, 'Onboardinging');  var subj = 'Welcome to Pedal Me!';
+  var body = 'Dear '+first+',\n\nCongratulations on passing your assessment to become a rider at Pedal Me.\n\nHere are your Onboardinging days:\n\n'
     +d1+' \u2014 Tech, mech training and shadowing.\n\n'
     +d2+' \u2014 Loading training, simulation job, lunch jobs whilst being shadowed and solo jobs if you stay on later.\n\n'
     +'Employee Registration\nhttps://docs.google.com/forms/d/1eqUTG1XOEv294_eXA8NR1d435MYpDa2fLTGwggRUGCE/edit?ts=664b6b49\n\n'
@@ -671,7 +671,7 @@ function openChecklist(name) {
   var bb = ce('button','bbtn');
   bb.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>';
   bb.onclick = function(){ openProfile(name); };
-  var bt = ce('div','btitle'); bt.textContent = 'Onboarding checklist';
+  var bt = ce('div','btitle'); bt.textContent = 'Onboardinging checklist';
   h.appendChild(bb); h.appendChild(bt); scr.appendChild(h);
 
   var c = ce('div','pad');
@@ -687,7 +687,7 @@ function openChecklist(name) {
   ta.value = (existingRow && existingRow['Notes']) || '';
   c.appendChild(ta);
   var saveBtn = ce('button','bem'); saveBtn.style.marginTop = '10px'; saveBtn.textContent = 'Save notes';
-  saveBtn.onclick = (function(n){ return function(){ saveOnboardingNotes(n); }; })(name);
+  saveBtn.onclick = (function(n){ return function(){ saveOnboardingingNotes(n); }; })(name);
   c.appendChild(saveBtn);
   scr.appendChild(c);
   renderChecklist(name);
@@ -701,7 +701,7 @@ function renderChecklist(name) {
   var list = document.getElementById('ck-list');
   if (!list) return;
   list.innerHTML = '';
-  ONBOARD_ITEMS.forEach(function(it) {
+  Onboarding_ITEMS.forEach(function(it) {
     var checked = !!(row && row[it.key]);
     var r = ce('div','ckrow' + (checked ? ' done' : ''));
     var box = ce('div','ckbox');
@@ -718,29 +718,29 @@ function renderChecklist(name) {
       }
     }
     r.appendChild(box); r.appendChild(ti);
-    r.onclick = (function(key, next){ return function(){ toggleOnboardingItem(name, key, next); }; })(it.key, !checked);
+    r.onclick = (function(key, next){ return function(){ toggleOnboardingingItem(name, key, next); }; })(it.key, !checked);
     list.appendChild(r);
   });
 }
 
-function toggleOnboardingItem(name, key, checked) {
+function toggleOnboardingingItem(name, key, checked) {
   var row = getChecklist(name);
-  if (!row) { row = {Trainee: name}; ONBOARD_CHECKLIST.push(row); }
+  if (!row) { row = {Trainee: name}; Onboarding_CHECKLIST.push(row); }
   row[key] = checked;
   row[key + '_by'] = checked ? TRAINER : '';
   row[key + '_at'] = checked ? new Date().toISOString() : '';
   renderChecklist(name);
-  var url = SHEET + '?action=setOnboardingItem&name=' + encodeURIComponent(name)
+  var url = SHEET + '?action=setOnboardingingItem&name=' + encodeURIComponent(name)
     + '&item=' + encodeURIComponent(key) + '&checked=' + (checked ? 'true' : 'false')
     + '&by=' + encodeURIComponent(TRAINER);
   fetch(url).then(function(r){ return r.json(); }).catch(function(e){ console.error(e); });
 }
-function saveOnboardingNotes(name) {
+function saveOnboardingingNotes(name) {
   var val = document.getElementById('ck-notes').value;
   var row = getChecklist(name);
-  if (!row) { row = {Trainee: name}; ONBOARD_CHECKLIST.push(row); }
+  if (!row) { row = {Trainee: name}; Onboarding_CHECKLIST.push(row); }
   row['Notes'] = val;
-  var url = SHEET + '?action=setOnboardingNotes&name=' + encodeURIComponent(name) + '&notes=' + encodeURIComponent(val);
+  var url = SHEET + '?action=setOnboardingingNotes&name=' + encodeURIComponent(name) + '&notes=' + encodeURIComponent(val);
   fetch(url).then(function(r){ return r.json(); }).catch(function(e){ console.error(e); });
 }
 function openEmail(name) {
