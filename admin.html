@@ -218,8 +218,9 @@ function jsonp(url, cb) {
   document.head.appendChild(script);
 }
 
-function loadData(fresh) {
+function loadViaJsonp(fresh) {
   var list = document.getElementById('trainee-list');
+  jsonp(SHEET + '?action=getAll' + (fresh ? '&nocache=1' : ''), function(d) {
   if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>';
 
   fetch(SHEET + '?action=getAll' + (fresh ? '&nocache=1' : ''))
