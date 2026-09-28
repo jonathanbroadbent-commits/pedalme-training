@@ -186,7 +186,10 @@ function loadStaff() {
   fetch(SHEET + '?action=getStaff')
     .then(function(r){ return r.json(); })
     .then(function(d){ populateStaffSelect(d.staff || []); })
-    .catch(function(e){ console.error('Staff load failed', e); });
+    .catch(function(e){
+      console.log('staff fetch failed, trying JSONP...', e);
+      jsonp(SHEET + '?action=getStaff', function(d){ populateStaffSelect(d.staff || []); });
+    });
 }
 
 function populateStaffSelect(names) {
