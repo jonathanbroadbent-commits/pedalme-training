@@ -544,7 +544,7 @@ function openProfile(name) {
   var ol = ce('div','secl'); ol.style.marginTop = '16px'; ol.textContent = 'Change status'; c.appendChild(ol);
   var sd = ce('div','ifl');
   var sel = ce('select','iel'); sel.id = 'status-select';
-  ['Prospect','Intro booked','Intro only','New starter','Active','Completed','Did not complete','Onboarded'].forEach(function(st){
+  ['In training','Onboarding','Rider','Did not complete'].forEach(function(st){
     var op = document.createElement('option');
     op.value = st; op.textContent = st;
     if (t.status === st) op.selected = true;
