@@ -227,7 +227,8 @@ function loadData(fresh) {
 
   fetch(SHEET + '?action=getAll' + (fresh ? '&nocache=1' : ''))
     .then(function(r){ return r.json(); })
-    .then(function(d){
+        .then(function(d){
+      if (d.error) { showLoadError(d.error); return; }
       TRAINEES     = d.trainees     || [];
       PROGRESS     = d.progress     || [];
       NEW_STARTERS = d.newStarters  || [];
