@@ -99,12 +99,9 @@ select.iel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--g600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
     </button>
   </div>
+ <div class="pad">
  <button class="bem" id="data-btn" style="margin-bottom:20px">📊 Data</button>
-    <div class="secl">New Starters</div>
-    <div class="tlist" id="new-starters-list">
-      <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>
-    </div>
-    <div class="secl" style="margin-top:24px">In Progress</div>
+    <div class="secl">In Progress</div>
     <div class="tlist" id="trainee-list">
       <div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>
     </div>
@@ -301,7 +298,7 @@ function buildIndexes() {
 
 function active() {
   return TRAINEES.filter(function(t){
-    return hasSession(t.name) && !isFinalStatus(t.status || '');
+    return t.status === 'In training';
   });
 }
 
