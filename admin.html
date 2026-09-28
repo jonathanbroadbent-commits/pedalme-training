@@ -221,9 +221,8 @@ function jsonp(url, cb) {
   document.head.appendChild(script);
 }
 
-function loadViaJsonp(fresh) {
+function loadData(fresh) {
   var list = document.getElementById('trainee-list');
-  jsonp(SHEET + '?action=getAll' + (fresh ? '&nocache=1' : ''), function(d) {
   if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:var(--g400);font-size:14px">Loading…</div>';
 
   fetch(SHEET + '?action=getAll' + (fresh ? '&nocache=1' : ''))
@@ -240,13 +239,13 @@ function loadViaJsonp(fresh) {
     })
     .catch(function(e){
       console.log('fetch failed, trying JSONP...', e);
-      loadViaJsonp();
+      loadViaJsonp(fresh);
     });
 }
 
-function loadViaJsonp() {
+function loadViaJsonp(fresh) {
   var list = document.getElementById('trainee-list');
-  jsonp(SHEET + '?action=getAll', function(d) {
+  jsonp(SHEET + '?action=getAll' + (fresh ? '&nocache=1' : ''), function(d) {
     TRAINEES     = d.trainees     || [];
     PROGRESS     = d.progress     || [];
     NEW_STARTERS = d.newStarters  || [];
@@ -260,8 +259,9 @@ function loadViaJsonp() {
     if (!TRAINEES.length && list) {
       list.innerHTML = '<div style="padding:20px;text-align:center;color:#A32D2D;font-size:14px">Could not load data. Check connection.</div>';
     }
-  }, 8000);
+  }, 15000);
 }
+
 
 function getProg(name) { return PROG_IDX[name] || null; }
 function getT(name) { return TRAINEE_IDX[name] || null; }
